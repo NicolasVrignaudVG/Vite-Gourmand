@@ -1,4 +1,147 @@
-<h1>Bonjour    </h1>
-<button class="btn btn-primary">Cliquez ici</button>
-    <script src=".node_modules/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-<i class="bi bi-fork-knife"></i>    
+<section class="hero">
+    <div class="hero-content">
+        <span class="hero-badge">Restaurant gastronomique à Bordeaux</span>
+
+        <h1 class="hero-title">
+            BIENVENUE CHEZ <br>
+            <span>VITE & GOURMAND</span>
+        </h1>
+
+        <p class="hero-subtitle">
+            Une expérience culinaire raffinée avec des produits frais,
+            locaux et de saison.
+        </p>
+
+        <div class="hero-buttons">
+            <button class="hero-button primary">
+                Découvrir nos menus
+            </button>
+
+            <button class="hero-button secondary">
+                Réserver une table
+            </button>
+        </div>
+    </div>
+</section>
+
+<!-- ATOUTS -->
+<section class="features-section">
+    <div class="section-title">
+        <h2>Pourquoi nous choisir ?</h2>
+        <div class="title-line"></div>
+    </div>
+
+    <div class="features-grid">
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-leaf"></i>
+            </div>
+            <h3>Produits frais</h3>
+            <p>Des ingrédients locaux sélectionnés chaque matin.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-utensils"></i>
+            </div>
+            <h3>Cuisine créative</h3>
+            <p>Des recettes gourmandes revisitées avec passion.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="feature-icon">
+                <i class="fas fa-star"></i>
+            </div>
+            <h3>Service premium</h3>
+            <p>Une équipe attentive pour un moment unique.</p>
+        </div>
+    </div>
+</section>
+
+<!-- HISTOIRE -->
+<section class="histoire">
+    <div class="histoire-image">
+        <img src="images/kifotofotografia-food-8151625.jpg" alt="Plat gastronomique">
+    </div>
+
+    <div class="histoire-text">
+        <span class="section-subtitle">Notre histoire</span>
+
+        <h2>25 ans de passion culinaire</h2>
+
+        <p>
+            « Vite & Gourmand » est né de la passion de Julie et José.
+            Depuis plus de 25 ans à Bordeaux, nous créons des expériences
+            culinaires chaleureuses pour tous vos événements.
+        </p>
+
+        <p>
+            Chaque menu évolue au fil des saisons afin de proposer une cuisine
+            authentique, créative et généreuse.
+        </p>
+
+        <button class="hero-button primary">
+            En savoir plus
+        </button>
+    </div>
+</section>
+
+<!-- AVIS -->
+<section class="avis">
+    <div class="section-title">
+        <h2>Avis de nos clients</h2>
+        <div class="title-line"></div>
+    </div>
+
+    <div class="avis-cards">
+        <div class="avis-card">
+            <div class="stars">★★★★★</div>
+            <p>
+                Cuisine excellente et produits très frais.
+                Le service était rapide et le personnel accueillant.
+            </p>
+            <p class="author">Camille D.</p>
+        </div>
+
+        <div class="avis-card">
+            <div class="stars">★★★★★</div>
+            <p>
+                Très belle découverte. Ambiance chaleureuse,
+                portions généreuses et plats délicieux.
+            </p>
+            <p class="author">Julien M.</p>
+        </div>
+
+        <div class="avis-card">
+            <div class="stars">★★★★★</div>
+            <p>
+                Restaurant élégant avec une superbe décoration.
+                Les plats sont savoureux et très bien présentés.
+            </p>
+            <p class="author">Sarah L.</p>
+        </div>
+    </div>
+
+    <button class="laisser-avis-button" id="openReviewModalBtn">
+        Laisser un avis
+    </button>
+</section>
+
+<!-- Modal pour laisser un avis -->
+<div id="reviewModal" class="modal">
+    <div class="modal-content">
+        <span class="close-modal" id="closeModalBtn">&times;</span>
+        <h3>Laissez votre avis</h3>
+        <p>Partagez votre expérience chez Vite&Gourmand</p>
+        
+        <input type="text" id="reviewerName" placeholder="Votre nom">
+        <textarea id="reviewMessage" rows="4" placeholder="Votre avis..."></textarea>
+        
+        <div class="modal-buttons">
+            <button id="submitReviewBtn">Envoyer</button>
+            <button id="cancelModalBtn">Annuler</button>
+        </div>
+    </div>
+</div>
+
+<div id="toastMessage" class="toast-msg"></div>

@@ -1,0 +1,170 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+// ═══════════════════════════════════════
+// _layout.scss — Header, Footer
+// ═══════════════════════════════════════
+
+// ── Header ──────────────────────────────
+.site-header {
+  background-color: $white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+  position: sticky;
+  top: 0;
+  z-index: 200;
+}
+
+.header-inner {
+  @include flex-between;
+  padding: 0.6rem 5%;
+  max-width: 1440px;
+  margin: 0 auto;
+}
+
+.header-logo img {
+  height: 60px;
+  width: auto;
+}
+
+// Navigation desktop
+.desktop-nav .navbar-list {
+  display: flex;
+  gap: 2rem;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+
+  .navbar-item a {
+    font-family: $font-secondary;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: $color-text-dark;
+    transition: $transition-fast;
+
+    &:hover,
+    &.active {
+      color: $color-primary;
+    }
+  }
+}
+
+// Bouton burger (visible uniquement mobile)
+.burger-btn {
+  display: none;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px;
+  color: $color-text-dark;
+  line-height: 1;
+
+  .bi-list {
+    font-size: 2rem;
+  }
+}
+
+// ── Offcanvas Bootstrap (menu mobile) ───
+#menuOffcanvas {
+  width: 280px;
+}
+
+.offcanvas-logo {
+  height: 48px;
+  width: auto;
+}
+
+.mobile-nav-list {
+  margin: 0;
+  padding: 0;
+
+  li a {
+    display: block;
+    padding: $space-sm $space-md;
+    font-family: $font-secondary;
+    font-weight: 600;
+    font-size: 1rem;
+    color: $color-text-dark;
+    border-bottom: 1px solid $color-border;
+    transition: $transition-fast;
+
+    &:hover {
+      background-color: $color-bg-light;
+      color: $color-primary;
+    }
+  }
+
+  li:last-child {
+    padding: $space-sm $space-md;
+  }
+}
+
+@include respond-to('md') {
+  .desktop-nav { display: none; }
+  .burger-btn  { display: block; }
+}
+
+// ── Footer ──────────────────────────────
+.footer {
+  background-color: $color-footer-bg;
+  color: $color-footer-text;
+  padding: $space-xl 5%;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-top: $space-lg;
+
+  &-logo,
+  &-horaires,
+  &-liens {
+    width: 30%;
+    min-width: 250px;
+    margin: $space-sm 0;
+  }
+
+  &-logo {
+    img {
+      width: 100px;
+      margin-bottom: $space-sm;
+      filter: brightness(0) invert(1);
+      opacity: 0.9;
+    }
+
+    p {
+      margin-bottom: $space-xs;
+      color: $color-text-muted;
+      font-size: 0.9rem;
+    }
+  }
+
+  h3 {
+    margin-bottom: $space-sm;
+    color: $color-secondary;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+
+  a {
+    color: $color-text-muted;
+
+    &:hover {
+      color: $color-secondary;
+    }
+  }
+
+  p {
+    margin-bottom: $space-xs;
+    font-size: 0.85rem;
+  }
+
+  @include respond-to('md') {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+
+    &-logo,
+    &-horaires,
+    &-liens {
+      width: 100%;
+    }
+  }
+}

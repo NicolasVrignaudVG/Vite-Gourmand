@@ -1,0 +1,47 @@
+@use 'variables' as *;
+
+// ═══════════════════════════════════════
+// _base.scss — Reset & styles globaux
+// ═══════════════════════════════════════
+
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: $font-main;
+  color: $color-text;
+  line-height: 1.6;
+  background-color: $color-bg;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: $transition;
+
+  &:hover {
+    color: $color-primary;
+  }
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+ul {
+  list-style: none;
+}
+
+button {
+  font-family: $font-main;
+}

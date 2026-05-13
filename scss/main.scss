@@ -1,2 +1,76 @@
-@import url("/node_modules/bootstrap-icons/font/bootstrap-icons.css");
-@import 'custom';   
+// ═══════════════════════════════════════
+// main.scss — Point d'entrée unique
+// ═══════════════════════════════════════
+// Ordre important : variables → mixins → base → layout → components → pages
+
+@use 'variables' as *;
+@use 'mixins'    as *;
+@use 'base'      as *;
+@use 'layout'    as *;
+@use 'components' as *;
+@use 'pages'     as *;
+
+// ═══════════════════════════════════════
+// Responsive (breakpoints globaux)
+// ═══════════════════════════════════════
+
+@include respond-to('lg') {
+  .container    { padding: $space-sm $space-md $space-lg; }
+  .info-split   { flex-direction: column; }
+  .histoire     { flex-direction: column; }
+
+  .histoire-text,
+  .histoire-image { width: 100%; }
+
+  .histoire-image { margin-top: $space-lg; }
+}
+
+@include respond-to('md') {
+  // Atouts & avis
+  .atouts,
+  .avis-cards {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .atout-card,
+  .avis-card { width: 80%; }
+
+  // Features
+  .features-grid {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .feature-card {
+    width: 100%;
+    max-width: 350px;
+  }
+
+  // Hero
+  .hero-title    { font-size: 2rem; }
+  .hero-subtitle { font-size: 1.2rem; }
+  .hero-simple h1 { font-size: 2rem; }
+
+  // Toast
+  .toast-msg {
+    white-space: normal;
+    text-align: center;
+    width: 80%;
+  }
+
+  // Connexion
+  .login-card {
+    margin: $space-sm;
+    padding: $space-lg $space-md;
+    border-radius: 18px;
+  }
+}
+
+@include respond-to('sm') {
+  .hero-title   { font-size: 1.5rem; }
+  .hero-button  { padding: 0.5rem $space-sm; font-size: 0.9rem; }
+  .hero-simple h1 { font-size: 1.8rem; }
+  .tagline      { font-size: 0.9rem; }
+  .review-btn   { padding: 0.7rem $space-md; font-size: 0.9rem; }
+}

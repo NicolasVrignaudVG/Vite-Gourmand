@@ -1,0 +1,68 @@
+@use 'variables' as *;
+
+// ═══════════════════════════════════════
+// _mixins.scss
+// ═══════════════════════════════════════
+
+@mixin flex-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+// Bouton principal de la charte
+@mixin button-brand($bg: $color-primary, $radius: $border-radius-xl) {
+  background-color: $bg;
+  color: $white;
+  border: none;
+  border-radius: $radius;
+  padding: 0.6rem 1.5rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: $font-main;
+  transition: $transition-fast;
+
+  &:hover {
+    background-color: $color-primary-dark;
+    transform: scale(0.98);
+  }
+}
+
+// Carte générique
+@mixin card($radius: $border-radius-lg) {
+  background-color: $color-bg-light;
+  border-radius: $radius;
+  box-shadow: $shadow-sm;
+  border: 1px solid $color-border-light;
+  padding: $space-md;
+  transition: $transition-fast;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: $shadow-md;
+  }
+}
+
+// Titre de section avec barre latérale colorée
+@mixin section-title {
+  font-family: $font-main;
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: $color-text-dark;
+  border-left: 5px solid $color-primary;
+  padding-left: $space-sm;
+  margin-bottom: $space-md;
+}
+
+// Responsive helper
+@mixin respond-to($bp) {
+  @if $bp == 'lg'   { @media (max-width: 1024px) { @content; } }
+  @if $bp == 'md'   { @media (max-width: 768px)  { @content; } }
+  @if $bp == 'sm'   { @media (max-width: 480px)  { @content; } }
+}

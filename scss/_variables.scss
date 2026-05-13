@@ -1,0 +1,66 @@
+// ═══════════════════════════════════════
+// _variables.scss — Palette & tokens
+// ═══════════════════════════════════════
+
+// ── Couleurs de marque ──────────────────
+$color-primary:      #c27e4a;   // Cuivré principal
+$color-primary-dark: #9b5e32;   // Hover / accent foncé
+$color-secondary:    #e2bc89;   // Doré clair (titres footer, accents)
+$color-gold:         #f5b342;   // Étoiles avis
+
+// ── Tons neutres (fond & texte) ─────────
+$color-bg:           #fefaf5;   // Fond page principal
+$color-bg-light:     #fffbf7;   // Fonds cartes / sections
+$color-bg-section:   #f9f9f9;   // Sections alternées
+
+$color-text:         #2c241a;   // Texte principal
+$color-text-dark:    #3a2c21;   // Titres
+$color-text-mid:     #5a4535;   // Texte secondaire
+$color-text-light:   #7a5e48;   // Sous-titres / descriptions
+$color-text-muted:   #bcaca0;   // Footer paragraphes
+
+// ── Bordures ────────────────────────────
+$color-border:       #efe3d8;
+$color-border-light: #eedfcb;
+
+// ── Footer ──────────────────────────────
+$color-footer-bg:    #1e1915;
+$color-footer-text:  #e6dacf;
+
+// ── États (succès, erreur) ──────────────
+$color-error:        #a32d2d;
+$color-success:      #3b6d11;
+
+// ── Blanc / Noir ────────────────────────
+$white: #ffffff;
+$black: #000000;
+
+// ══════════════════════════════════════
+// Polices
+// ══════════════════════════════════════
+$font-main:      'Montserrat', sans-serif;
+$font-secondary: 'Hind Madurai', sans-serif;
+
+// ══════════════════════════════════════
+// Espacements
+// ══════════════════════════════════════
+$space-xs:  0.5rem;
+$space-sm:  1rem;
+$space-md:  1.5rem;
+$space-lg:  2rem;
+$space-xl:  3rem;
+
+// ══════════════════════════════════════
+// Misc
+// ══════════════════════════════════════
+$border-radius-sm:  8px;
+$border-radius-md:  16px;
+$border-radius-lg:  28px;
+$border-radius-xl:  40px;
+
+$shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+$shadow-md: 0 6px 18px rgba(0, 0, 0, 0.06);
+$shadow-lg: 0 20px 35px rgba(0, 0, 0, 0.15);
+
+$transition: all 0.3s ease;
+$transition-fast: all 0.2s ease;

@@ -1,0 +1,273 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+// ═══════════════════════════════════════
+// _components.scss — Boutons, cartes, modal, toast
+// ═══════════════════════════════════════
+
+// ── Boutons ─────────────────────────────
+.button,
+.hero-button,
+.laisser-avis-button {
+  @include button-brand;
+}
+
+.review-btn {
+  @include button-brand($radius: 60px);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0.85rem 2.2rem;
+  font-size: 1rem;
+  box-shadow: $shadow-sm;
+
+  i { font-size: 1.1rem; }
+}
+
+// ── Feature cards (3 piliers) ────────────
+.features-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: $space-lg;
+  margin-bottom: $space-xl;
+}
+
+.feature-card {
+  @include card;
+  flex: 1;
+  min-width: 240px;
+  text-align: center;
+  padding: 1.8rem 1.2rem;
+
+  h3 {
+    font-size: 1.4rem;
+    font-weight: 700;
+    margin-bottom: 0.6rem;
+    color: $color-text-dark;
+  }
+
+  p {
+    color: $color-text-light;
+    font-size: 0.9rem;
+    font-weight: 400;
+  }
+}
+
+.feature-icon {
+  font-size: 2.5rem;
+  color: $color-primary;
+  margin-bottom: $space-sm;
+}
+
+// ── Cartes Atouts ────────────────────────
+.atout-card {
+  @include card($radius: $border-radius-sm);
+  text-align: center;
+  width: 30%;
+  min-width: 250px;
+  border: 1px solid $color-border;
+
+  img {
+    width: 50px;
+    height: 50px;
+    margin-bottom: $space-sm;
+  }
+
+  h3 {
+    margin-bottom: $space-xs;
+    color: $color-primary;
+    font-size: 1.2rem;
+  }
+
+  p {
+    color: $color-text-light;
+    font-size: 0.95rem;
+  }
+}
+
+// ── Cartes Avis ──────────────────────────
+.avis-card {
+  @include card($radius: $border-radius-sm);
+  text-align: center;
+  width: 30%;
+  min-width: 250px;
+
+  p {
+    margin-bottom: $space-xs;
+    color: $color-text-mid;
+    font-size: 0.95rem;
+  }
+
+  .stars {
+    color: $color-gold;
+    font-size: 1.2rem;
+    margin-bottom: $space-xs;
+  }
+
+  .author {
+    font-style: italic;
+    margin-top: $space-sm;
+    color: $color-primary;
+    font-weight: 600;
+  }
+}
+
+// ── Section avis clients ─────────────────
+.reviews-section {
+  margin: $space-xl 0 2.5rem;
+
+  h2 {
+    font-family: $font-main;
+    font-size: 1.8rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: $space-lg;
+    color: $color-text-dark;
+  }
+}
+
+.reviews-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-lg;
+  justify-content: center;
+}
+
+.review-card {
+  @include card;
+  flex: 1;
+  min-width: 260px;
+  padding: 1.8rem;
+}
+
+.stars {
+  color: $color-gold;
+  font-size: 1.2rem;
+  letter-spacing: 2px;
+  margin-bottom: $space-sm;
+}
+
+.review-text {
+  font-weight: 400;
+  line-height: 1.45;
+  margin-bottom: $space-sm;
+  color: $color-text;
+}
+
+.review-author {
+  font-weight: 600;
+  color: $color-primary;
+  margin-top: $space-xs;
+  font-size: 0.9rem;
+}
+
+.leave-review {
+  text-align: center;
+  margin-top: 2.5rem;
+  margin-bottom: $space-lg;
+}
+
+// ── Modal laisser un avis ────────────────
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  backdrop-filter: blur(3px);
+
+  &-content {
+    background: #fffef9;
+    border-radius: $border-radius-lg;
+    max-width: 460px;
+    width: 90%;
+    padding: $space-lg;
+    box-shadow: $shadow-lg;
+    position: relative;
+    border: 1px solid $color-border;
+
+    h3 {
+      font-family: $font-main;
+      font-size: 1.6rem;
+      margin-bottom: $space-xs;
+      color: $color-text-dark;
+    }
+
+    textarea {
+      width: 100%;
+      border-radius: $border-radius-md;
+      border: 1px solid $color-border;
+      padding: 0.8rem;
+      font-family: inherit;
+      margin: $space-sm 0;
+      resize: vertical;
+      background: $color-bg;
+    }
+
+    input {
+      width: 100%;
+      border-radius: $border-radius-xl;
+      border: 1px solid $color-border;
+      padding: 0.7rem $space-sm;
+      margin-bottom: 0.8rem;
+      font-family: inherit;
+      background: $color-bg;
+    }
+  }
+
+  &-buttons {
+    display: flex;
+    gap: $space-sm;
+    justify-content: flex-end;
+    margin-top: $space-sm;
+
+    button {
+      padding: 0.5rem 1.5rem;
+      border-radius: $border-radius-xl;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: $font-main;
+
+      &:first-child {
+        background: $color-primary;
+        color: $white;
+      }
+
+      &:last-child {
+        background: $color-border;
+        color: $color-text-dark;
+      }
+    }
+  }
+}
+
+.close-modal {
+  position: absolute;
+  top: 15px;
+  right: 20px;
+  font-size: 1.6rem;
+  cursor: pointer;
+  color: $color-text-light;
+}
+
+// ── Toast notification ───────────────────
+.toast-msg {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: $color-text;
+  color: #f7e9dc;
+  padding: 0.7rem 1.8rem;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  z-index: 1100;
+  display: none;
+  font-weight: 500;
+  white-space: nowrap;
+  box-shadow: $shadow-md;
+}

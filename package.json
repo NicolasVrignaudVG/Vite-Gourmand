@@ -1,6 +1,13 @@
 {
+  "name": "vite-et-gourmand",
+  "version": "1.0.0",
+  "description": "Site vitrine du restaurant Vite et Gourmand",
+  
   "dependencies": {
     "bootstrap": "^5.3.8",
     "bootstrap-icons": "^1.13.1"
+  },
+  "devDependencies": {
+    "sass": "^1.77.0"
   }
 }
