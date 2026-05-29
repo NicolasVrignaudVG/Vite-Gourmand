@@ -6,16 +6,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ── Résolution hash → nom de page ────────────────────────
     const pageMap = {
-        '':             'home',
-        'home':         'home',
-        'menus':        'menus',
-        'menu-detail':  'menu-detail',
-        'connexion':    'connexion',
-        'inscription':  'inscription',
-        'contact':      'contact',
+        '':                     'home',
+        'home':                 'home',
+        'menus':                'menus',
+        'menu-detail':          'menu-detail',
+        'commande':             'commande',
+        'connexion':            'connexion',
+        'inscription':          'inscription',
+        'contact':              'contact',
+        'mot-de-passe-oublie':  'mot-de-passe-oublie',
+        'reinitialiser-mdp':    'reinitialiser-mdp',
+        'mentions-legales':     'mentions-legales',
+        'cgv':                  'cgv',
+        'espace-utilisateur':   'espace-utilisateur',
+        'espace-employe':       'espace-employe',
+        'espace-admin':         'espace-admin',
     };
 
-    const resolveRoute = hash => pageMap[hash] ?? null;
+    const resolveRoute = hash => {
+        // Extrait le nom de page (ignore les query params éventuels)
+        const pageName = hash.split('?')[0];
+        return pageMap[pageName] ?? null;
+    };
 
     // ── Chargement d'une page ────────────────────────────────
     const loadPage = async (pageName) => {
@@ -34,8 +46,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const route = allRoutes.find(r => r.pathHtml.includes(`${pageName}.html`));
             document.title = route ? `${route.title} – ${websiteName}` : websiteName;
 
-            // Initialisation des fonctionnalités de la page
-            // Les fonctions sont définies dans js/script.js
             initPageFeatures(pageName);
 
         } catch (error) {
@@ -55,25 +65,18 @@ document.addEventListener('DOMContentLoaded', () => {
     // ── Appel des fonctions de script.js selon la page ───────
     function initPageFeatures(pageName) {
         switch (pageName) {
-            case 'menus':
-                initMenuDetails();
-                initMenuFilters();
-                break;
-            case 'menu-detail':
-                initMenuDetail();
-                break;
-            case 'home':
-                initHomeFeatures();
-                break;
-            case 'connexion':
-                initConnexionFeatures();
-                break;
-            case 'inscription':
-                initInscriptionFeatures();
-                break;
-            case 'contact':
-                initContactFeatures();
-                break;
+            case 'menus':                initMenuDetails();          break;
+            case 'menu-detail':          initMenuDetail();           break;
+            case 'commande':             initCommande();             break;
+            case 'home':                 initHomeFeatures();         break;
+            case 'connexion':            initConnexionFeatures();    break;
+            case 'inscription':          initInscriptionFeatures();  break;
+            case 'contact':              initContactFeatures();      break;
+            case 'mot-de-passe-oublie':  initForgotPassword();       break;
+            case 'reinitialiser-mdp':    initResetPassword();        break;
+            case 'espace-utilisateur':   initEspaceUtilisateur();    break;
+            case 'espace-employe':       initEspaceEmploye();        break;
+            case 'espace-admin':         initEspaceAdmin();          break;
         }
         initScrollAnimations();
     }
@@ -92,23 +95,25 @@ document.addEventListener('DOMContentLoaded', () => {
         const link = e.target.closest('a[href^="#"]');
         if (!link) return;
 
-        const hash = link.getAttribute('href').substring(1);
-        const page = resolveRoute(hash) ?? hash;
+        const fullHash = link.getAttribute('href').substring(1);
+        const page     = resolveRoute(fullHash) ?? fullHash.split('?')[0];
 
         if (page) {
             e.preventDefault();
-            history.pushState(null, '', `#${page}`);
+            history.pushState(null, '', `#${fullHash}`);
             loadPage(page);
         }
     });
 
     // ── Démarrage ────────────────────────────────────────────
-    const initialPage = resolveRoute(window.location.hash.substring(1)) ?? 'home';
+    const initialHash = window.location.hash.substring(1);
+    const initialPage = resolveRoute(initialHash) ?? 'home';
     loadPage(initialPage);
 
     // ── Boutons Précédent / Suivant ──────────────────────────
     window.addEventListener('popstate', () => {
-        const page = resolveRoute(window.location.hash.substring(1)) ?? 'home';
+        const hash = window.location.hash.substring(1);
+        const page = resolveRoute(hash) ?? hash.split('?')[0];
         loadPage(page);
     });
 });

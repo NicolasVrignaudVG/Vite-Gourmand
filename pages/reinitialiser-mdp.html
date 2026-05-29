@@ -1,0 +1,38 @@
+<div class="connexion-page">
+    <div class="connexion-bg">
+        <img src="images/pexels-olaseni-omoare-2148436008-30322395.jpg" alt="Restaurant Vite&amp;Gourmand">
+    </div>
+
+    <div class="login-card">
+        <div class="card-header">
+            <img src="images/LOGO.png" alt="Logo Vite&amp;Gourmand">
+            <h1>Nouveau mot de passe</h1>
+            <p>Choisissez un nouveau mot de passe sécurisé</p>
+        </div>
+
+        <div class="form-msg" id="formMsg" role="alert"></div>
+
+        <form class="login-form" id="resetForm" novalidate>
+            <div class="input-group">
+                <label for="password">Nouveau mot de passe</label>
+                <div class="input-wrapper">
+                    <input type="password" id="password" placeholder="••••••••" required minlength="10" autocomplete="new-password">
+                    <button type="button" class="input-icon toggle password-toggle" aria-label="Afficher / masquer">👁️</button>
+                </div>
+                <small style="color:var(--color-text-muted);font-size:.8rem;margin-top:.3rem;display:block">
+                    10 caractères min, une majuscule, une minuscule, un chiffre, un caractère spécial.
+                </small>
+            </div>
+
+            <div class="input-group">
+                <label for="confirmPassword">Confirmer le mot de passe</label>
+                <div class="input-wrapper">
+                    <input type="password" id="confirmPassword" placeholder="••••••••" required minlength="10" autocomplete="new-password">
+                    <button type="button" class="input-icon toggle password-toggle2" aria-label="Afficher / masquer">👁️</button>
+                </div>
+            </div>
+
+            <button type="submit" class="login-btn">Réinitialiser</button>
+        </form>
+    </div>
+</div>

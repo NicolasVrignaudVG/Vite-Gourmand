@@ -1,0 +1,210 @@
+<div class="commande-container">
+
+    <div class="main-title">
+        <h1>COMMANDER</h1>
+        <div class="decoration"></div>
+    </div>
+
+    <!-- Indicateur d'étapes -->
+    <div class="steps-indicator">
+        <div class="step active" data-step="1">
+            <div class="step-number">1</div>
+            <span class="step-label">Prestation</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step" data-step="2">
+            <div class="step-number">2</div>
+            <span class="step-label">Menu</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step" data-step="3">
+            <div class="step-number">3</div>
+            <span class="step-label">Récapitulatif</span>
+        </div>
+    </div>
+
+    <div class="commande-body">
+
+        <!-- ══════════════════════════════
+             ÉTAPE 1 — Infos prestation
+        ══════════════════════════════ -->
+        <div class="commande-step" id="step-1">
+            <h2 class="step-title">Informations de la prestation</h2>
+
+            <div class="commande-form">
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="cmd-nom">Nom *</label>
+                        <div class="input-wrapper">
+                            <input type="text" id="cmd-nom" placeholder="Votre nom" autocomplete="family-name">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="cmd-prenom">Prénom *</label>
+                        <div class="input-wrapper">
+                            <input type="text" id="cmd-prenom" placeholder="Votre prénom" autocomplete="given-name">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="cmd-email">Adresse e-mail *</label>
+                        <div class="input-wrapper">
+                            <input type="email" id="cmd-email" placeholder="exemple@email.com" autocomplete="email">
+                            <span class="input-icon">📧</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="cmd-gsm">Numéro de GSM *</label>
+                        <div class="input-wrapper">
+                            <input type="tel" id="cmd-gsm" placeholder="06 00 00 00 00" autocomplete="tel">
+                            <span class="input-icon">📱</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label for="cmd-adresse">Adresse de livraison *</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="cmd-adresse" placeholder="Numéro et nom de rue" autocomplete="address-line1">
+                        <span class="input-icon">📍</span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="cmd-ville">Ville *</label>
+                        <div class="input-wrapper">
+                            <input type="text" id="cmd-ville" placeholder="Bordeaux" autocomplete="address-level2">
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="cmd-cp">Code postal *</label>
+                        <div class="input-wrapper">
+                            <input type="text" id="cmd-cp" placeholder="33000" autocomplete="postal-code">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Info frais livraison hors Bordeaux -->
+                <div class="info-livraison">
+                    📦 Livraison gratuite à Bordeaux. Hors Bordeaux : 5€ + 0,59€/km.
+                </div>
+
+                <div class="form-row">
+                    <div class="input-group">
+                        <label for="cmd-date">Date de la prestation *</label>
+                        <div class="input-wrapper">
+                            <input type="date" id="cmd-date">
+                            <span class="input-icon">📅</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="cmd-heure">Heure souhaitée *</label>
+                        <div class="input-wrapper">
+                            <input type="time" id="cmd-heure">
+                            <span class="input-icon">🕐</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-msg" id="step1-msg" role="alert"></div>
+
+                <div class="step-actions">
+                    <button class="btn-step-next" id="btn-step1-next">
+                        Continuer → Menu
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- ══════════════════════════════
+             ÉTAPE 2 — Choix du menu
+        ══════════════════════════════ -->
+        <div class="commande-step hidden" id="step-2">
+            <h2 class="step-title">Choisissez votre menu</h2>
+
+            <div class="menus-choix" id="menus-choix">
+                <!-- Injecté par JS depuis MENUS_DATA -->
+            </div>
+
+            <div class="form-msg" id="step2-msg" role="alert"></div>
+
+            <div class="step-actions">
+                <button class="btn-step-prev" id="btn-step2-prev">← Retour</button>
+                <button class="btn-step-next" id="btn-step2-next">Continuer → Récapitulatif</button>
+            </div>
+        </div>
+
+        <!-- ══════════════════════════════
+             ÉTAPE 3 — Récapitulatif & prix
+        ══════════════════════════════ -->
+        <div class="commande-step hidden" id="step-3">
+            <h2 class="step-title">Récapitulatif & validation</h2>
+
+            <div class="recap-body">
+
+                <!-- Nombre de personnes -->
+                <div class="recap-section">
+                    <h3>Nombre de personnes</h3>
+                    <div class="personnes-selector">
+                        <button class="btn-pers" id="btn-pers-moins">−</button>
+                        <span id="nb-personnes-display">2</span>
+                        <button class="btn-pers" id="btn-pers-plus">+</button>
+                        <span class="pers-min-info" id="pers-min-info"></span>
+                    </div>
+                    <div class="remise-info" id="remise-info"></div>
+                </div>
+
+                <!-- Récap prestation -->
+                <div class="recap-section">
+                    <h3>Prestation</h3>
+                    <div class="recap-lines" id="recap-prestation"></div>
+                </div>
+
+                <!-- Récap menu -->
+                <div class="recap-section">
+                    <h3>Menu sélectionné</h3>
+                    <div class="recap-lines" id="recap-menu"></div>
+                </div>
+
+                <!-- Détail du prix -->
+                <div class="recap-prix" id="recap-prix">
+                    <!-- Injecté par JS -->
+                </div>
+
+                <!-- Conditions du menu -->
+                <div class="detail-conditions recap-section" id="recap-conditions">
+                    <!-- Injecté par JS -->
+                </div>
+
+            </div>
+
+            <div class="form-msg" id="step3-msg" role="alert"></div>
+
+            <div class="step-actions">
+                <button class="btn-step-prev" id="btn-step3-prev">← Retour</button>
+                <button class="btn-commander" id="btn-valider-commande">
+                    ✅ Valider la commande
+                </button>
+            </div>
+        </div>
+
+        <!-- ══════════════════════════════
+             CONFIRMATION
+        ══════════════════════════════ -->
+        <div class="commande-step hidden" id="step-confirm">
+            <div class="commande-confirm">
+                <div class="confirm-icon">✅</div>
+                <h2>Commande confirmée !</h2>
+                <p>Merci pour votre commande. Un e-mail de confirmation vous a été envoyé.</p>
+                <p class="confirm-ref" id="confirm-ref"></p>
+                <button class="button" onclick="window.location.hash='home'">
+                    Retour à l'accueil
+                </button>
+            </div>
+        </div>
+
+    </div>
+</div>

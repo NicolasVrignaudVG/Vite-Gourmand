@@ -1,0 +1,265 @@
+<div class="espace-container">
+
+    <div class="espace-header">
+        <div>
+            <h1>Espace Administrateur</h1>
+            <p class="espace-subtitle">Connecté en tant qu'<strong>Administrateur</strong></p>
+        </div>
+        <button class="btn-logout" id="btn-logout">Se déconnecter</button>
+    </div>
+
+    <div class="espace-layout">
+
+        <nav class="espace-nav">
+            <button class="espace-nav-btn active" data-panel="commandes-adm">📦 Commandes</button>
+            <button class="espace-nav-btn" data-panel="avis-adm">⭐ Avis</button>
+            <button class="espace-nav-btn" data-panel="menus-adm">🍽️ Menus</button>
+            <button class="espace-nav-btn" data-panel="plats-adm">🥗 Plats</button>
+            <button class="espace-nav-btn" data-panel="horaires-adm">🕐 Horaires</button>
+            <button class="espace-nav-btn" data-panel="employes-adm">👥 Employés</button>
+            <button class="espace-nav-btn" data-panel="stats-adm">📊 Statistiques</button>
+        </nav>
+
+        <div class="espace-content">
+
+            <!-- PANEL : COMMANDES -->
+            <div class="espace-panel" id="panel-commandes-adm">
+                <div class="panel-title-bar">
+                    <h2>Gestion des commandes</h2>
+                    <div class="panel-filters">
+                        <select id="filter-statut-adm">
+                            <option value="">Tous les statuts</option>
+                            <option value="en_attente">En attente</option>
+                            <option value="accepte">Acceptée</option>
+                            <option value="en_preparation">En préparation</option>
+                            <option value="en_livraison">En cours de livraison</option>
+                            <option value="livre">Livré</option>
+                            <option value="retour_materiel">Retour matériel</option>
+                            <option value="terminee">Terminée</option>
+                        </select>
+                        <input type="text" id="filter-client-adm" placeholder="🔍 Rechercher un client…">
+                    </div>
+                </div>
+                <div class="commandes-list" id="adm-commandes-list">
+                    <p style="text-align:center;padding:2rem;color:var(--color-text-muted)">Chargement…</p>
+                </div>
+            </div>
+
+            <!-- PANEL : AVIS -->
+            <div class="espace-panel hidden" id="panel-avis-adm">
+                <div class="panel-title-bar"><h2>Gestion des avis</h2></div>
+                <div class="avis-list" id="adm-avis-list">
+                    <p style="text-align:center;padding:2rem;color:var(--color-text-muted)">Chargement…</p>
+                </div>
+            </div>
+
+            <!-- PANEL : MENUS -->
+            <div class="espace-panel hidden" id="panel-menus-adm">
+                <div class="panel-title-bar">
+                    <h2>Gestion des menus</h2>
+                    <button class="btn-step-next" id="btn-nouveau-menu-adm">+ Nouveau menu</button>
+                </div>
+                <div class="menus-gestion-list" id="adm-menus-list">
+                    <p style="text-align:center;padding:2rem;color:var(--color-text-muted)">Chargement…</p>
+                </div>
+            </div>
+
+
+            <!-- PANEL : PLATS -->
+            <div class="espace-panel hidden" id="panel-plats-adm">
+                <div class="panel-title-bar">
+                    <h2>Gestion des plats</h2>
+                    <button class="btn-step-next" id="btn-nouveau-plat">+ Nouveau plat</button>
+                </div>
+                <div class="plat-form commande-form" id="plat-form" style="display:none;">
+                    <h3 id="plat-form-title">Nouveau plat</h3>
+                    <input type="hidden" id="plat-id">
+                    <div class="form-row">
+                        <div class="input-group">
+                            <label for="plat-nom">Nom du plat *</label>
+                            <div class="input-wrapper"><input type="text" id="plat-nom" placeholder="Ex : Velouté de potimarron"></div>
+                        </div>
+                        <div class="input-group">
+                            <label for="plat-type">Type *</label>
+                            <select id="plat-type">
+                                <option value="entree">Entrée</option>
+                                <option value="plat">Plat</option>
+                                <option value="dessert">Dessert</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="plat-description">Description</label>
+                        <div class="input-wrapper"><textarea id="plat-description" rows="3" placeholder="Description du plat..."></textarea></div>
+                    </div>
+                    <div class="input-group">
+                        <label for="plat-allergenes">Allergènes (séparés par des virgules)</label>
+                        <div class="input-wrapper"><input type="text" id="plat-allergenes" placeholder="Gluten, Lactose, Œufs..."></div>
+                    </div>
+                    <div class="form-msg" id="plat-msg" role="alert"></div>
+                    <div class="step-actions">
+                        <button class="btn-step-next" id="btn-save-plat">💾 Enregistrer</button>
+                        <button class="btn-step-prev" id="btn-cancel-plat">Annuler</button>
+                    </div>
+                </div>
+                <div class="plats-list" id="adm-plats-list">
+                    <p style="text-align:center;padding:2rem;color:var(--color-text-muted)">Chargement…</p>
+                </div>
+            </div>
+
+            <!-- PANEL : HORAIRES -->
+            <div class="espace-panel hidden" id="panel-horaires-adm">
+                <div class="panel-title-bar"><h2>Gestion des horaires</h2></div>
+                <div class="horaires-form commande-form">
+                    <div id="horaires-list"></div>
+                    <div class="step-actions"><button class="btn-step-next" id="btn-save-horaires">💾 Enregistrer</button></div>
+                </div>
+            </div>
+
+            <!-- PANEL : EMPLOYÉS -->
+            <div class="espace-panel hidden" id="panel-employes-adm">
+                <div class="panel-title-bar">
+                    <h2>Gestion des employés</h2>
+                    <button class="btn-step-next" id="btn-nouvel-employe">+ Créer un compte employé</button>
+                </div>
+                <div class="employes-list" id="adm-employes-list">
+                    <p style="text-align:center;padding:2rem;color:var(--color-text-muted)">Chargement…</p>
+                </div>
+
+                <!-- Modal création employé -->
+                <div class="modal" id="modal-nouvel-employe">
+                    <div class="modal-content">
+                        <span class="close-modal" id="close-nouvel-employe">&times;</span>
+                        <h3>Créer un compte employé</h3>
+                        <div class="input-group" style="margin-top:1rem">
+                            <label for="emp-email-new">Adresse e-mail (username)</label>
+                            <div class="input-wrapper"><input type="email" id="emp-email-new" placeholder="prenom.nom@vitegourmand.fr"><span class="input-icon">📧</span></div>
+                        </div>
+                        <div class="input-group" style="margin-top:1rem">
+                            <label for="emp-mdp-new">Mot de passe temporaire</label>
+                            <div class="input-wrapper"><input type="password" id="emp-mdp-new" placeholder="••••••••"><span class="input-icon toggle password-toggle" role="button" tabindex="0">👁️</span></div>
+                        </div>
+                        <p class="espace-note" style="margin-top:.8rem">L'employé recevra un e-mail de notification. Le mot de passe ne sera pas communiqué par mail.</p>
+                        <div class="modal-buttons">
+                            <button id="btn-confirm-employe">Créer le compte</button>
+                            <button id="btn-cancel-employe">Annuler</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PANEL : STATISTIQUES -->
+            <div class="espace-panel hidden" id="panel-stats-adm">
+                <div class="panel-title-bar"><h2>Statistiques & Chiffre d'affaires</h2></div>
+
+                <div class="stats-filters">
+                    <div class="filter-group">
+                        <label for="stats-menu-filter">Menu</label>
+                        <select id="stats-menu-filter">
+                            <option value="">Tous les menus</option>
+                        </select>
+                    </div>
+                    <div class="filter-group">
+                        <label for="stats-date-debut">Du</label>
+                        <div class="input-wrapper"><input type="date" id="stats-date-debut"></div>
+                    </div>
+                    <div class="filter-group">
+                        <label for="stats-date-fin">Au</label>
+                        <div class="input-wrapper"><input type="date" id="stats-date-fin"></div>
+                    </div>
+                    <button class="btn-step-next" id="btn-apply-stats">Appliquer</button>
+                </div>
+
+                <div class="stats-kpis" id="stats-kpis">
+                    <div class="kpi-card">
+                        <span class="kpi-label">Commandes totales</span>
+                        <strong class="kpi-value" id="kpi-total">–</strong>
+                    </div>
+                    <div class="kpi-card">
+                        <span class="kpi-label">Chiffre d'affaires</span>
+                        <strong class="kpi-value" id="kpi-ca">–</strong>
+                    </div>
+                    <div class="kpi-card">
+                        <span class="kpi-label">Menu le + commandé</span>
+                        <strong class="kpi-value" id="kpi-top">–</strong>
+                    </div>
+                </div>
+
+                <div class="chart-section">
+                    <h3>Commandes par menu</h3>
+                    <div id="chart-commandes">
+                        <p style="text-align:center;padding:1rem;color:var(--color-text-muted)">Chargement…</p>
+                    </div>
+                </div>
+
+                <div class="chart-section">
+                    <h3>Chiffre d'affaires par menu</h3>
+                    <div id="ca-bars">
+                        <p style="text-align:center;padding:1rem;color:var(--color-text-muted)">Chargement…</p>
+                    </div>
+                </div>
+            </div>
+
+        </div><!-- /.espace-content -->
+    </div><!-- /.espace-layout -->
+
+
+<!-- Modal création/modification menu -->
+<div class="modal" id="modal-menu-form">
+    <div class="modal-content" style="max-width:620px;width:90%;max-height:90vh;overflow-y:auto">
+        <span class="close-modal" id="close-menu-form">&times;</span>
+        <h3 id="menu-form-title-label">Nouveau menu</h3>
+        <input type="hidden" id="menu-form-id">
+
+        <div class="input-group" style="margin-top:1rem">
+            <label for="menu-form-titre">Titre *</label>
+            <div class="input-wrapper"><input type="text" id="menu-form-titre" placeholder="Ex : Menu Découverte"></div>
+        </div>
+
+        <div class="input-group">
+            <label>Image du menu</label>
+            <div class="upload-zone">
+                <input type="file" id="menu-form-image-file" accept="image/jpeg,image/png,image/webp" style="display:none">
+                <input type="hidden" id="menu-form-image">
+                <button type="button" class="btn-step-next" onclick="document.getElementById('menu-form-image-file').click()">
+                    📁 Choisir une image
+                </button>
+                <small style="color:var(--color-text-muted);margin-left:.5rem">JPG, PNG, WebP — max 5 Mo</small>
+                <img id="menu-form-preview" src="" alt="Aperçu" style="display:none;width:120px;height:90px;object-fit:cover;border-radius:6px;margin-top:.5rem">
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label for="menu-form-description">Description</label>
+            <div class="input-wrapper"><textarea id="menu-form-description" rows="3" placeholder="Présentation du menu..."></textarea></div>
+        </div>
+
+        <div class="input-group">
+            <label for="menu-form-conditions">Conditions</label>
+            <div class="input-wrapper"><textarea id="menu-form-conditions" rows="2" placeholder="Ex : Commander 48h à l'avance..."></textarea></div>
+        </div>
+
+        <div class="form-row">
+            <div class="input-group">
+                <label for="menu-form-prix">Prix / pers. (€) *</label>
+                <div class="input-wrapper"><input type="number" id="menu-form-prix" min="1" step="0.5" placeholder="35"></div>
+            </div>
+            <div class="input-group">
+                <label for="menu-form-min">Nb personnes min. *</label>
+                <div class="input-wrapper"><input type="number" id="menu-form-min" min="1" placeholder="2"></div>
+            </div>
+            <div class="input-group">
+                <label for="menu-form-stock">Stock disponible</label>
+                <div class="input-wrapper"><input type="number" id="menu-form-stock" min="0" placeholder="10"></div>
+            </div>
+        </div>
+
+        <div class="form-msg" id="menu-form-msg" role="alert"></div>
+        <div class="modal-buttons">
+            <button id="btn-save-menu-form">💾 Enregistrer</button>
+            <button id="btn-cancel-menu-form">Annuler</button>
+        </div>
+    </div>
+</div>
+
+</div><!-- /.espace-container -->

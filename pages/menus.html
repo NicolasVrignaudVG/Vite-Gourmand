@@ -1,40 +1,27 @@
 <div class="menus-container">
 
-    <!-- TITRE -->
     <div class="main-title">
         <h1>NOS MENUS</h1>
         <div class="decoration"></div>
     </div>
 
-    <!-- ══════════════════════════════════
-         BARRE DE FILTRES
-    ══════════════════════════════════ -->
     <div class="filters-bar">
         <div class="filters-grid">
-
-            <!-- Prix maximum -->
             <div class="filter-group">
                 <label for="filter-prix-max">Prix maximum</label>
                 <div class="range-wrapper">
-                    <input type="range" id="filter-prix-max"
-                           min="0" max="100" value="100" step="5">
+                    <input type="range" id="filter-prix-max" min="0" max="100" value="100" step="5">
                     <span class="range-value" id="prix-max-label">100€</span>
                 </div>
             </div>
-
-            <!-- Fourchette de prix -->
             <div class="filter-group">
-                <label>Fourchette de prix</label>
+                <label for="filter-prix-min">Fourchette de prix</label>
                 <div class="price-range-inputs">
-                    <input type="number" id="filter-prix-min" placeholder="Min €"
-                           min="0" max="200" value="">
+                    <input type="number" id="filter-prix-min" placeholder="Min €" min="0" max="200" value="">
                     <span>—</span>
-                    <input type="number" id="filter-prix-max2" placeholder="Max €"
-                           min="0" max="200" value="">
+                    <input type="number" id="filter-prix-max2" placeholder="Max €" aria-label="Prix maximum" min="0" max="200" value="">
                 </div>
             </div>
-
-            <!-- Thème -->
             <div class="filter-group">
                 <label for="filter-theme">Thème</label>
                 <select id="filter-theme">
@@ -45,8 +32,6 @@
                     <option value="evenement">Événement</option>
                 </select>
             </div>
-
-            <!-- Régime -->
             <div class="filter-group">
                 <label for="filter-regime">Régime</label>
                 <select id="filter-regime">
@@ -56,255 +41,43 @@
                     <option value="vegan">Vegan</option>
                 </select>
             </div>
-
-            <!-- Nombre de personnes -->
             <div class="filter-group">
                 <label for="filter-personnes">Nb personnes min. max</label>
-                <input type="number" id="filter-personnes"
-                       placeholder="Ex : 2" min="1" max="50" value="">
+                <input type="number" id="filter-personnes" placeholder="Ex : 2" min="1" max="50" value="">
             </div>
-
         </div>
-
         <div class="filters-actions">
-            <button class="btn-reset-filters" id="btn-reset-filters">
-                ✕ Réinitialiser
-            </button>
+            <button class="btn-reset-filters" id="btn-reset-filters">✕ Réinitialiser</button>
             <span class="filters-count" id="filters-count">3 menus affichés</span>
         </div>
     </div>
 
-    <!-- ══════════════════════════════════
-         GRILLE DES MENUS
-    ══════════════════════════════════ -->
+    <!-- Grille remplie dynamiquement par script.js / initMenuDetails() -->
     <div class="menus-grid" id="menus-grid">
+        <p style="text-align:center;padding:2rem;color:var(--color-text-muted)">Chargement des menus…</p>
+    </div>
 
-        <!-- Menu Découverte -->
-        <div class="menu-card"
-             data-prix="35"
-             data-theme="classique"
-             data-regime="classique"
-             data-personnes="2">
-            <div class="menu-image">
-                <img src="images/kifotofotografia-food-8151625.jpg" alt="Menu Découverte">
-            </div>
-            <div class="menu-content">
-                <div class="menu-tags">
-                    <span class="tag tag-theme">Classique</span>
-                    <span class="tag tag-regime">Classique</span>
-                </div>
-                <h2 class="menu-title">Menu Découverte</h2>
-                <p class="menu-description">Une expérience gourmande autour des grands classiques recettes, mettant en valeur des produits de saison et des associations équilibrées.</p>
-                <div class="menu-infos">
-                    <div class="menu-min">Min 2 personnes</div>
-                    <div class="menu-price">35€</div>
-                </div>
-                <button class="btn-details" data-menu="decouverte">Détails</button>
-            </div>
-            <div class="menu-details" id="details-decouverte">
-                <div class="details-content">
-                    <h4>🍽️ Entrée</h4>
-                    <p>Velouté de potimarron aux châtaignes ou Carpaccio de Saint-Jacques à l'huile de truffe</p>
-                    <h4>🍝 Plat</h4>
-                    <p>Filet de bar rôti, écrasé de pommes de terre à la truffe noire ou Suprême de volaille fermière, sauce morilles</p>
-                    <h4>🍰 Dessert</h4>
-                    <p>Moelleux au chocolat, cœur coulant caramel beurre salé ou Tarte fine aux pommes, glace vanille</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Menu Gastronomique -->
-        <div class="menu-card"
-             data-prix="55"
-             data-theme="evenement"
-             data-regime="classique"
-             data-personnes="2">
-            <div class="menu-image">
-                <img src="images/joannawielgosz-pasta-7209002-1.png" alt="Menu Gastronomique">
-            </div>
-            <div class="menu-content">
-                <div class="menu-tags">
-                    <span class="tag tag-theme">Événement</span>
-                    <span class="tag tag-regime">Classique</span>
-                </div>
-                <h2 class="menu-title">Menu Gastronomique</h2>
-                <p class="menu-description">Un menu raffiné signé par le chef, alliant techniques gastronomiques, produits d'exception et dressages élégants pour une expérience unique.</p>
-                <div class="menu-infos">
-                    <div class="menu-min">Min 2 personnes</div>
-                    <div class="menu-price">55€</div>
-                </div>
-                <button class="btn-details" data-menu="gastronomique">Détails</button>
-            </div>
-            <div class="menu-details" id="details-gastronomique">
-                <div class="details-content">
-                    <h4>🍽️ Entrée</h4>
-                    <p>Huitres spéciales Gillardeau n°2 ou Foie gras poêlé, chutney de figues et pain d'épices</p>
-                    <h4>🍝 Plat</h4>
-                    <p>Homard bleu rôti, beurre coral line ou Carré d'agneau de lait, purée de céleri-rave à la truffe</p>
-                    <h4>🍰 Dessert</h4>
-                    <p>Soufflé chaud au Grand Marnier ou Dôme au chocolat Guanaja, croustillant praliné</p>
-                </div>
-            </div>
-        </div>
-
-        <!-- Menu Rapide -->
-        <div class="menu-card"
-             data-prix="15"
-             data-theme="classique"
-             data-regime="classique"
-             data-personnes="1">
-            <div class="menu-image">
-                <img src="images/joannawielgosz-pasta-7209002-1-2.png" alt="Menu Rapide">
-            </div>
-            <div class="menu-content">
-                <div class="menu-tags">
-                    <span class="tag tag-theme">Classique</span>
-                    <span class="tag tag-regime">Classique</span>
-                </div>
-                <h2 class="menu-title">Menu Rapide</h2>
-                <p class="menu-description">Une formule efficace et savoureuse pour la pause déjeuner, avec des plats généreux préparés rapidement à base de produits frais.</p>
-                <div class="menu-infos">
-                    <div class="menu-min">Min 1 personne</div>
-                    <div class="menu-price">15€</div>
-                </div>
-                <button class="btn-details" data-menu="rapide">Détails</button>
-            </div>
-            <div class="menu-details" id="details-rapide">
-                <div class="details-content">
-                    <h4>🍽️ Entrée</h4>
-                    <p>Soupe du jour ou Salade composée (au choix)</p>
-                    <h4>🍝 Plat</h4>
-                    <p>Burger maison, frites maison ou Quiche lorraine, salade verte</p>
-                    <h4>🍰 Dessert</h4>
-                    <p>Crème brûlée ou Tarte du jour ou Café gourmand</p>
-                </div>
-            </div>
-        </div>
-
-    </div><!-- /#menus-grid -->
-
-    <!-- Message aucun résultat -->
     <div class="no-results" id="no-results" style="display:none;">
         <p>😕 Aucun menu ne correspond à vos critères.</p>
         <button class="btn-reset-filters" id="btn-reset-filters2">Réinitialiser les filtres</button>
     </div>
 
-    <!-- ══════════════════════════════════
-         SECTION BOISSONS
-    ══════════════════════════════════ -->
     <div class="drinks-section">
         <h2 class="drinks-title">NOS BOISSONS</h2>
         <div class="drinks-grid">
             <div class="drink-category">
                 <h3>SOFTS</h3>
-                <ul>
-                    <li>Coca-cola</li>
-                    <li>Jus d'orange pressé</li>
-                    <li>Eau minérale</li>
-                </ul>
+                <ul><li>Coca-cola</li><li>Jus d'orange pressé</li><li>Eau minérale</li></ul>
             </div>
             <div class="drink-category">
                 <h3>VINS</h3>
-                <ul>
-                    <li>Verre de vin rouge/blanc</li>
-                    <li>Bouteille sélection du sommelier</li>
-                </ul>
+                <ul><li>Verre de vin rouge/blanc</li><li>Bouteille sélection du sommelier</li></ul>
             </div>
             <div class="drink-category">
                 <h3>CHAUDES</h3>
-                <ul>
-                    <li>Café</li>
-                    <li>Thé</li>
-                    <li>Chocolat chaud</li>
-                </ul>
+                <ul><li>Café</li><li>Thé</li><li>Chocolat chaud</li></ul>
             </div>
         </div>
     </div>
 
-</div><!-- /.menus-container -->
-
-<script>
-(function () {
-    // ── Références DOM ──────────────────────────────────────
-    const cards        = document.querySelectorAll('.menu-card');
-    const grid         = document.getElementById('menus-grid');
-    const noResults    = document.getElementById('no-results');
-    const countLabel   = document.getElementById('filters-count');
-
-    const sliderMax    = document.getElementById('filter-prix-max');
-    const labelMax     = document.getElementById('prix-max-label');
-    const inputMin     = document.getElementById('filter-prix-min');
-    const inputMax2    = document.getElementById('filter-prix-max2');
-    const selectTheme  = document.getElementById('filter-theme');
-    const selectRegime = document.getElementById('filter-regime');
-    const inputPers    = document.getElementById('filter-personnes');
-
-    const btnReset  = document.getElementById('btn-reset-filters');
-    const btnReset2 = document.getElementById('btn-reset-filters2');
-
-    // ── Mise à jour du label du slider ──────────────────────
-    sliderMax.addEventListener('input', () => {
-        labelMax.textContent = sliderMax.value + '€';
-        applyFilters();
-    });
-
-    // ── Écoute de tous les filtres ───────────────────────────
-    [inputMin, inputMax2, selectTheme, selectRegime, inputPers].forEach(el => {
-        el.addEventListener('input', applyFilters);
-    });
-
-    // ── Réinitialisation ─────────────────────────────────────
-    function resetFilters() {
-        sliderMax.value      = 100;
-        labelMax.textContent = '100€';
-        inputMin.value       = '';
-        inputMax2.value      = '';
-        selectTheme.value    = '';
-        selectRegime.value   = '';
-        inputPers.value      = '';
-        applyFilters();
-    }
-    btnReset.addEventListener('click',  resetFilters);
-    btnReset2.addEventListener('click', resetFilters);
-
-    // ── Logique de filtrage ───────────────────────────────────
-    function applyFilters() {
-        const maxSlider = parseInt(sliderMax.value);
-        const minPrice  = inputMin.value  !== '' ? parseFloat(inputMin.value)  : 0;
-        const maxPrice  = inputMax2.value !== '' ? parseFloat(inputMax2.value) : Infinity;
-        const theme     = selectTheme.value.toLowerCase();
-        const regime    = selectRegime.value.toLowerCase();
-        const minPers   = inputPers.value !== '' ? parseInt(inputPers.value) : 0;
-
-        let visible = 0;
-
-        cards.forEach(card => {
-            const prix      = parseFloat(card.dataset.prix);
-            const cardTheme = card.dataset.theme.toLowerCase();
-            const cardReg   = card.dataset.regime.toLowerCase();
-            const pers      = parseInt(card.dataset.personnes);
-
-            const okSlider  = prix <= maxSlider;
-            const okMinP    = prix >= minPrice;
-            const okMaxP    = prix <= maxPrice;
-            const okTheme   = theme  === '' || cardTheme === theme;
-            const okRegime  = regime === '' || cardReg   === regime;
-            const okPers    = minPers === 0  || pers     <= minPers;
-
-            const show = okSlider && okMinP && okMaxP && okTheme && okRegime && okPers;
-
-            card.style.display = show ? '' : 'none';
-            if (show) visible++;
-        });
-
-        // Mise à jour compteur
-        countLabel.textContent = visible + ' menu' + (visible > 1 ? 's' : '') + ' affiché' + (visible > 1 ? 's' : '');
-
-        // Message aucun résultat
-        noResults.style.display = visible === 0 ? 'block' : 'none';
-    }
-
-    // ── Lancement initial ─────────────────────────────────────
-    applyFilters();
-})();
-</script>
+</div>

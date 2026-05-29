@@ -1,0 +1,142 @@
+<div class="espace-container">
+
+    <div class="espace-header">
+        <div>
+            <h1>Espace Employé</h1>
+            <p class="espace-subtitle">Connecté en tant qu'<strong>Employé</strong></p>
+        </div>
+        <button class="btn-logout" id="btn-logout">Se déconnecter</button>
+    </div>
+
+    <div class="espace-layout">
+
+        <nav class="espace-nav">
+            <button class="espace-nav-btn active" data-panel="commandes-emp">📦 Commandes</button>
+            <button class="espace-nav-btn" data-panel="avis-emp">⭐ Avis à valider</button>
+            <button class="espace-nav-btn" data-panel="menus-emp">🍽️ Menus</button>
+            <button class="espace-nav-btn" data-panel="plats-emp">🥗 Plats</button>
+            <button class="espace-nav-btn" data-panel="horaires-emp">🕐 Horaires</button>
+        </nav>
+
+        <div class="espace-content">
+
+            <!-- PANEL : COMMANDES -->
+            <div class="espace-panel" id="panel-commandes-emp">
+                <div class="panel-title-bar">
+                    <h2>Gestion des commandes</h2>
+                    <div class="panel-filters">
+                        <select id="filter-statut-emp">
+                            <option value="">Tous les statuts</option>
+                            <option value="en_attente">En attente</option>
+                            <option value="accepte">Acceptée</option>
+                            <option value="en_preparation">En préparation</option>
+                            <option value="en_livraison">En cours de livraison</option>
+                            <option value="livre">Livré</option>
+                            <option value="retour_materiel">Retour matériel</option>
+                            <option value="terminee">Terminée</option>
+                        </select>
+                        <input type="text" id="filter-client-emp" placeholder="🔍 Rechercher un client…">
+                    </div>
+                </div>
+                <div class="commandes-list" id="emp-commandes-list">
+                    <p style="text-align:center;padding:2rem;color:var(--color-text-muted)">Chargement…</p>
+                </div>
+                <div class="modal" id="modal-annulation">
+                    <div class="modal-content">
+                        <button type="button" class="close-modal" id="close-annulation" aria-label="Fermer">&times;</button>
+                        <h3>Annuler la commande</h3>
+                        <p>Vous devez avoir contacté le client avant d'annuler.</p>
+                        <div class="input-group" style="margin-top:1rem">
+                            <label for="mode-contact">Mode de contact</label>
+                            <select id="mode-contact"><option value="gsm">Appel GSM</option><option value="mail">E-mail</option></select>
+                        </div>
+                        <div class="input-group" style="margin-top:1rem">
+                            <label for="motif-annulation">Motif d'annulation</label>
+                            <textarea id="motif-annulation" rows="3" placeholder="Expliquez le motif…"></textarea>
+                        </div>
+                        <div class="modal-buttons">
+                            <button id="btn-confirm-annulation">Confirmer l'annulation</button>
+                            <button id="btn-cancel-annulation">Annuler</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PANEL : AVIS -->
+            <div class="espace-panel hidden" id="panel-avis-emp">
+                <div class="panel-title-bar"><h2>Avis à valider</h2></div>
+                <div class="avis-list" id="emp-avis-list">
+                    <p style="text-align:center;padding:2rem;color:var(--color-text-muted)">Chargement…</p>
+                </div>
+            </div>
+
+            <!-- PANEL : MENUS -->
+            <div class="espace-panel hidden" id="panel-menus-emp">
+                <div class="panel-title-bar">
+                    <h2>Gestion des menus</h2>
+                    <button class="btn-step-next" id="btn-nouveau-menu">+ Nouveau menu</button>
+                </div>
+                <div class="menus-gestion-list" id="emp-menus-list">
+                    <p style="text-align:center;padding:2rem;color:var(--color-text-muted)">Chargement…</p>
+                </div>
+            </div>
+
+<!-- PANEL : PLATS (à ajouter dans espace-employe.html ET espace-admin.html) -->
+<div class="espace-panel hidden" id="panel-plats-emp" class="espace-panel hidden">
+    <div class="panel-title-bar">
+        <h2>Gestion des plats</h2>
+        <button class="btn-step-next" id="btn-nouveau-plat">+ Nouveau plat</button>
+    </div>
+
+    <!-- Formulaire création/modification plat -->
+    <div class="plat-form commande-form" id="plat-form" style="display:none;">
+        <h3 id="plat-form-title">Nouveau plat</h3>
+        <input type="hidden" id="plat-id">
+        <div class="form-row">
+            <div class="input-group">
+                <label for="plat-nom">Nom du plat *</label>
+                <div class="input-wrapper"><input type="text" id="plat-nom" placeholder="Ex : Velouté de potimarron"></div>
+            </div>
+            <div class="input-group">
+                <label for="plat-type">Type *</label>
+                <select id="plat-type">
+                    <option value="entree">Entrée</option>
+                    <option value="plat">Plat</option>
+                    <option value="dessert">Dessert</option>
+                </select>
+            </div>
+        </div>
+        <div class="input-group">
+            <label for="plat-description">Description</label>
+            <div class="input-wrapper"><textarea id="plat-description" rows="3" placeholder="Description du plat..."></textarea></div>
+        </div>
+        <div class="input-group">
+            <label for="plat-allergenes">Allergènes (séparés par des virgules)</label>
+            <div class="input-wrapper"><input type="text" id="plat-allergenes" placeholder="Gluten, Lactose, Œufs..."></div>
+        </div>
+        <div class="form-msg" id="plat-msg" role="alert"></div>
+        <div class="step-actions">
+            <button class="btn-step-next" id="btn-save-plat">💾 Enregistrer</button>
+            <button class="btn-step-prev" id="btn-cancel-plat">Annuler</button>
+        </div>
+    </div>
+
+    <!-- Liste des plats -->
+    <div class="plats-list" id="emp-plats-list">
+        <p style="text-align:center;padding:2rem;color:var(--color-text-muted)">Chargement…</p>
+    </div>
+</div>
+
+            <!-- PANEL : HORAIRES -->
+            <div class="espace-panel hidden" id="panel-horaires-emp">
+                <div class="panel-title-bar"><h2>Gestion des horaires</h2></div>
+                <div class="horaires-form commande-form">
+                    <div id="horaires-list"></div>
+                    <div class="step-actions"><button class="btn-step-next" id="btn-save-horaires">💾 Enregistrer</button></div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</div>

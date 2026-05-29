@@ -1,8 +1,4 @@
-export default class Route {
-    constructor(url, title, pathHtml, pathJS = "") {
-      this.url = url;
-      this.title = title;
-      this.pathHtml = pathHtml;
-      this.pathJS = pathJS;
-    }
+// Route — remplacé par une fonction factory (plus de classe avec seulement un constructeur)
+export default function Route(url, title, pathHtml, pathJS = "") {
+    return { url, title, pathHtml, pathJS };
 }
