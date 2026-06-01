@@ -77,4 +77,46 @@
         </div>
     </div>
 
+
+<!-- Modal modification commande -->
+<div class="modal" id="modal-modifier-commande">
+    <div class="modal-content" style="max-width:500px;width:90%">
+        <span class="close-modal" id="close-modifier-commande">&times;</span>
+        <h3>Modifier la commande</h3>
+        <input type="hidden" id="modif-commande-id">
+        <div class="form-row" style="margin-top:1rem">
+            <div class="input-group">
+                <label for="modif-date">Date *</label>
+                <div class="input-wrapper"><input type="date" id="modif-date"></div>
+            </div>
+            <div class="input-group">
+                <label for="modif-heure">Heure *</label>
+                <div class="input-wrapper"><input type="time" id="modif-heure"></div>
+            </div>
+        </div>
+        <div class="input-group">
+            <label for="modif-adresse">Adresse de livraison *</label>
+            <div class="input-wrapper"><input type="text" id="modif-adresse" placeholder="Numéro et nom de rue"></div>
+        </div>
+        <div class="form-row">
+            <div class="input-group">
+                <label for="modif-ville">Ville *</label>
+                <div class="input-wrapper"><input type="text" id="modif-ville"></div>
+            </div>
+            <div class="input-group">
+                <label for="modif-cp">Code postal *</label>
+                <div class="input-wrapper"><input type="text" id="modif-cp"></div>
+            </div>
+        </div>
+        <div class="input-group">
+            <label for="modif-personnes">Nombre de personnes *</label>
+            <div class="input-wrapper"><input type="number" id="modif-personnes" min="1"></div>
+        </div>
+        <div class="form-msg" id="modif-msg" role="alert"></div>
+        <div class="modal-buttons">
+            <button id="btn-save-modifier-commande">💾 Enregistrer</button>
+            <button onclick="document.getElementById('modal-modifier-commande').style.display='none'">Annuler</button>
+        </div>
+    </div>
+</div>
 </div>
