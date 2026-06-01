@@ -381,7 +381,7 @@ async function initCommande() {
 
     function goToStep(n) {
         document.querySelectorAll('.commande-step').forEach(s => s.classList.add('hidden'));
-        const target = n === 'confirm' ? 'step-confirm' : `step-${n}`;
+        const target = n === 'confirm' ? 'step-confirm' : n === 'plats' ? 'step-plats' : `step-${n}`;
         document.getElementById(target)?.classList.remove('hidden');
         document.querySelectorAll('.step[data-step]').forEach(s => {
             const sn = parseInt(s.dataset.step);
@@ -454,11 +454,65 @@ async function initCommande() {
             const menu = await Menus.getById(state.menuId);
             state.menuData    = menu;
             state.nbPersonnes = menu.nombre_personne_minimum;
-            buildStep3();
-            goToStep(3);
+            await buildStepPlats(menu);
+            goToStep('plats');
         } catch (err) {
             showMsg(msg, err.message, 'error');
         }
+    });
+
+
+    async function buildStepPlats(menu) {
+        const container = document.getElementById('plats-selection');
+        if (!container) return;
+        const plats    = menu.plats || [];
+        const entrees  = plats.filter(p => p.typePlat === 'entree');
+        const platsArr = plats.filter(p => p.typePlat === 'plat');
+        const desserts = plats.filter(p => p.typePlat === 'dessert');
+
+        const renderCategorie = (titre, liste, type) => `
+            <div class="plats-categorie">
+                <h4>${titre}</h4>
+                <div class="plats-grid">
+                    ${liste.map(p => `
+                        <label class="plat-choix-card">
+                            <input type="radio" name="plat-${type}" value="${p.id}" required>
+                            <div class="plat-choix-info">
+                                <strong>${sanitize(p.nom)}</strong>
+                                <span>${sanitize(p.description || '')}</span>
+                                ${p.allergenes?.length ? `<small>⚠️ ${p.allergenes.map(a => sanitize(a.libelle || a)).join(', ')}</small>` : ''}
+                            </div>
+                            <div class="plat-choix-check">✓</div>
+                        </label>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+
+        container.innerHTML = `
+            <h3 style="margin-bottom:.5rem">Menu : <em>${sanitize(menu.titre)}</em></h3>
+            <p style="color:var(--color-text-muted);margin-bottom:1.5rem">Choisissez un plat par catégorie</p>
+            ${entrees.length  ? renderCategorie('🥗 Entrée',  entrees,  'entree')  : ''}
+            ${platsArr.length ? renderCategorie('🍽️ Plat',    platsArr, 'plat')    : ''}
+            ${desserts.length ? renderCategorie('🍮 Dessert', desserts, 'dessert') : ''}
+        `;
+    }
+
+    document.getElementById('btn-plats-prev')?.addEventListener('click', () => goToStep(2));
+    document.getElementById('btn-plats-next')?.addEventListener('click', () => {
+        const msg       = document.getElementById('plats-msg');
+        const entreeId  = document.querySelector('input[name="plat-entree"]:checked')?.value;
+        const platId    = document.querySelector('input[name="plat-plat"]:checked')?.value;
+        const dessertId = document.querySelector('input[name="plat-dessert"]:checked')?.value;
+
+        if (!entreeId || !platId || !dessertId) {
+            showMsg(msg, 'Veuillez choisir une entrée, un plat et un dessert.', 'error');
+            return;
+        }
+
+        state.platsChoisis = [parseInt(entreeId), parseInt(platId), parseInt(dessertId)];
+        buildStep3();
+        goToStep(3);
     });
 
     async function buildStep3() {

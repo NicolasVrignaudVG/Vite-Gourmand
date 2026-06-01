@@ -1666,3 +1666,19 @@ textarea:focus-visible {
     border: 2px solid var(--color-border, #e5e7eb);
     border-radius: var(--radius-sm, 6px);
 }
+
+/* ── Sélection des plats (étape commande) ───────────────── */
+.plats-selection-container { padding: var(--space-md, 1rem) 0; }
+.plats-categorie { margin-bottom: var(--space-lg, 1.5rem); }
+.plats-categorie h4 { font-size: 1.1rem; color: var(--color-primary, #c07a3a); margin-bottom: var(--space-sm, .75rem); border-bottom: 1px solid var(--color-border, #e5e7eb); padding-bottom: .5rem; }
+.plats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: var(--space-sm, .75rem); }
+.plat-choix-card { display: flex; align-items: flex-start; gap: .75rem; padding: var(--space-sm, .75rem); border: 2px solid var(--color-border, #e5e7eb); border-radius: var(--radius-sm, 6px); cursor: pointer; transition: border-color .2s, background .2s; position: relative; }
+.plat-choix-card:hover { border-color: var(--color-primary, #c07a3a); background: #fef9f5; }
+.plat-choix-card input[type="radio"] { position: absolute; opacity: 0; }
+.plat-choix-card:has(input:checked) { border-color: var(--color-primary, #c07a3a); background: #fef0e3; }
+.plat-choix-card:has(input:checked) .plat-choix-check { opacity: 1; }
+.plat-choix-info { flex: 1; }
+.plat-choix-info strong { display: block; font-size: .95rem; margin-bottom: .25rem; }
+.plat-choix-info span { font-size: .85rem; color: var(--color-text-muted, #666); }
+.plat-choix-info small { display: block; font-size: .8rem; color: var(--color-warning, #d97706); margin-top: .25rem; }
+.plat-choix-check { font-size: 1.2rem; color: var(--color-primary, #c07a3a); opacity: 0; transition: opacity .2s; flex-shrink: 0; }
