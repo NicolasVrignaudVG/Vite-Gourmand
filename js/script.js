@@ -751,8 +751,45 @@ async function initEspaceUtilisateur() {
         console.log('Commandes non chargées :', err.message);
     }
 
-    document.getElementById('btn-save-profil')?.addEventListener('click', () => {
-        showMsg(document.getElementById('profil-msg'), 'Profil mis à jour !', 'success');
+    // Pré-remplir les champs profil
+    const userProfil = Auth.getUser();
+    if (userProfil) {
+        if (document.getElementById('profil-nom'))     document.getElementById('profil-nom').value     = userProfil.nom       || '';
+        if (document.getElementById('profil-prenom'))  document.getElementById('profil-prenom').value  = userProfil.prenom    || '';
+        if (document.getElementById('profil-email'))   document.getElementById('profil-email').value   = userProfil.email     || '';
+        if (document.getElementById('profil-tel'))     document.getElementById('profil-tel').value     = userProfil.telephone || '';
+        if (document.getElementById('profil-adresse')) document.getElementById('profil-adresse').value = userProfil.adresse   || '';
+    }
+
+    document.getElementById('btn-save-profil')?.addEventListener('click', async () => {
+        const msg     = document.getElementById('profil-msg');
+        const nom     = document.getElementById('profil-nom')?.value.trim();
+        const prenom  = document.getElementById('profil-prenom')?.value.trim();
+        const tel     = document.getElementById('profil-tel')?.value.trim();
+        const adresse = document.getElementById('profil-adresse')?.value.trim();
+        const mdp     = document.getElementById('profil-mdp')?.value;
+
+        const data = {};
+        if (nom)     data.nom       = nom;
+        if (prenom)  data.prenom    = prenom;
+        if (tel)     data.telephone = tel;
+        if (adresse) data.adresse   = adresse;
+        if (mdp)     data.password  = mdp;
+
+        try {
+            const result = await Auth.updateMe(data);
+            const stored = Auth.getUser();
+            if (stored) {
+                stored.nom       = result.nom;
+                stored.prenom    = result.prenom;
+                stored.telephone = result.telephone;
+                stored.adresse   = result.adresse;
+                localStorage.setItem('user', JSON.stringify(stored));
+            }
+            showMsg(msg, 'Profil mis à jour avec succès !', 'success');
+        } catch (err) {
+            showMsg(msg, err.message, 'error');
+        }
     });
     initPasswordToggle('.password-toggle', 'profil-mdp');
 }

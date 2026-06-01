@@ -70,6 +70,10 @@ const Auth = {
         return apiFetch('/api/auth/me');
     },
 
+    async updateMe(data) {
+        return apiFetch('/api/auth/me', { method: 'PUT', body: JSON.stringify(data) });
+    },
+
 
     async forgotPassword(email) {
         return apiFetch('/api/auth/forgot-password', {
