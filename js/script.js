@@ -759,6 +759,28 @@ async function initEspaceUtilisateur() {
                 });
             });
 
+            // Modification commande
+            list.querySelectorAll('.btn-modifier-commande').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const item     = btn.closest('.commande-item');
+                    const id       = item.dataset.id;
+                    const commande = commandes.find(c => c.id == id);
+                    if (!commande) return;
+
+                    // Pré-remplir le modal
+                    const modal = document.getElementById('modal-modifier-commande');
+                    if (!modal) { alert('Modal de modification non trouvé.'); return; }
+                    document.getElementById('modif-commande-id').value    = id;
+                    document.getElementById('modif-date').value           = commande.datePrestation ? commande.datePrestation.substring(0,10) : '';
+                    document.getElementById('modif-heure').value          = commande.datePrestation ? commande.datePrestation.substring(11,16) : '';
+                    document.getElementById('modif-adresse').value        = commande.adresseLivraison || '';
+                    document.getElementById('modif-ville').value          = commande.villeLivraison || '';
+                    document.getElementById('modif-cp').value             = commande.cpLivraison || '';
+                    document.getElementById('modif-personnes').value      = commande.nombrePersonnes || 1;
+                    modal.style.display = 'flex';
+                });
+            });
+
             // Annulation
             list.querySelectorAll('.btn-annuler-commande').forEach(btn => {
                 btn.addEventListener('click', async () => {
@@ -804,6 +826,39 @@ async function initEspaceUtilisateur() {
     } catch (err) {
         console.log('Commandes non chargées :', err.message);
     }
+
+    // Modal modification commande
+    document.getElementById('close-modifier-commande')?.addEventListener('click', () => {
+        document.getElementById('modal-modifier-commande').style.display = 'none';
+    });
+    document.getElementById('btn-save-modifier-commande')?.addEventListener('click', async () => {
+        const id       = document.getElementById('modif-commande-id')?.value;
+        const date     = document.getElementById('modif-date')?.value;
+        const heure    = document.getElementById('modif-heure')?.value;
+        const adresse  = document.getElementById('modif-adresse')?.value.trim();
+        const ville    = document.getElementById('modif-ville')?.value.trim();
+        const cp       = document.getElementById('modif-cp')?.value.trim();
+        const nb       = parseInt(document.getElementById('modif-personnes')?.value);
+        const msg      = document.getElementById('modif-msg');
+
+        if (!date || !heure || !adresse || !ville || !cp || !nb) {
+            showMsg(msg, 'Tous les champs sont obligatoires.', 'error'); return;
+        }
+        try {
+            await Commandes.update(id, {
+                date_prestation:   `${date}T${heure}:00`,
+                adresse_livraison: adresse,
+                ville_livraison:   ville,
+                cp_livraison:      cp,
+                nombre_personnes:  nb,
+            });
+            showMsg(msg, 'Commande modifiée avec succès.', 'success');
+            setTimeout(() => {
+                document.getElementById('modal-modifier-commande').style.display = 'none';
+                chargerCommandesUtilisateur();
+            }, 1000);
+        } catch (err) { showMsg(msg, err.message, 'error'); }
+    });
 
     document.getElementById('btn-save-profil')?.addEventListener('click', async () => {
         const msg     = document.getElementById('profil-msg');
