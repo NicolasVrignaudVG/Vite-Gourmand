@@ -782,7 +782,7 @@ async function initEspaceEmploye() {
                     <div class="commande-item-header">
                         <div>
                             <span class="commande-ref">${sanitize(c.numero_commande)}</span>
-                            <span class="statut-badge statut-${sanitize(c.statut)}">${c.statut.replace(/_/g, ' ')}</span>
+                            <span class="statut-badge statut-${sanitize(c.statut||'')}">${(c.statut||'-').replace(/_/g, ' ')}</span>
                         </div>
                         <span class="commande-date">${new Date(c.date_prestation).toLocaleDateString('fr-FR')} — ${new Date(c.date_prestation).toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'})}</span>
                     </div>
