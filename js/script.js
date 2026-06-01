@@ -479,7 +479,7 @@ async function initCommande() {
                 try {
                     const token = localStorage.getItem('jwt_token');
                     const resp  = await fetch(
-                        `${API_URL}/api/commandes/livraison?adresse=${encodeURIComponent(state.adresse)}&ville=${encodeURIComponent(state.ville)}&cp=${encodeURIComponent(state.cp)}`,
+                        `http://127.0.0.1:8000/api/commandes/livraison?adresse=${encodeURIComponent(state.adresse)}&ville=${encodeURIComponent(state.ville)}&cp=${encodeURIComponent(state.cp)}`,
                         { headers: token ? { 'Authorization': `Bearer ${token}` } : {} }
                     );
                     if (resp.ok) { const d = await resp.json(); fraisLivr = d.frais ?? 5; distanceKm = d.distance ?? 0; }
@@ -651,15 +651,15 @@ async function initEspaceUtilisateur() {
                 <div class="commande-item" data-statut="${sanitize(c.statut)}" data-id="${c.id}">
                     <div class="commande-item-header">
                         <div>
-                            <span class="commande-ref">${sanitize(c.numero_commande)}</span>
-                            <span class="statut-badge statut-${sanitize(c.statut)}">${c.statut.replace(/_/g, ' ')}</span>
+                            <span class="commande-ref">${sanitize(c.numeroCommande || c.numero_commande || '–')}</span>
+                            <span class="statut-badge statut-${sanitize(c.statut||'')}">${(c.statut||'–').replace(/_/g, ' ')}</span>
                         </div>
-                        <span class="commande-date">${new Date(c.date_prestation).toLocaleDateString('fr-FR')}</span>
+                        <span class="commande-date">${c.datePrestation||c.date_prestation ? new Date(c.datePrestation||c.date_prestation).toLocaleDateString('fr-FR') : '–'}</span>
                     </div>
                     <div class="commande-item-body">
-                        <div class="commande-info-line"><span>Menu</span><strong>${c.menu?.titre || ''}</strong></div>
-                        <div class="commande-info-line"><span>Personnes</span><strong>${sanitize(c.nombre_personnes)}</strong></div>
-                        <div class="commande-info-line"><span>Total</span><strong>${sanitize(c.prix_total)}€</strong></div>
+                        <div class="commande-info-line"><span>Menu</span><strong>${c.menu?.titre || '–'}</strong></div>
+                        <div class="commande-info-line"><span>Personnes</span><strong>${sanitize(c.nombrePersonnes || c.nombre_personnes || '–')}</strong></div>
+                        <div class="commande-info-line"><span>Total</span><strong>${sanitize(c.prixTotal || c.prix_total || '–')}€</strong></div>
                     </div>
                     ${c.statut === 'en_attente' ? `
                         <div class="commande-item-actions">
