@@ -674,6 +674,7 @@ function initEspaceNav() {
             document.querySelectorAll('.espace-panel').forEach(p => p.classList.add('hidden'));
             btn.classList.add('active');
             document.getElementById(`panel-${btn.dataset.panel}`)?.classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
     });
     document.getElementById('btn-logout')?.addEventListener('click', () => Auth.logout());
