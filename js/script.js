@@ -751,21 +751,11 @@ async function initEspaceUtilisateur() {
         console.log('Commandes non chargées :', err.message);
     }
 
-    // Pré-remplir les champs profil
-    const userProfil = Auth.getUser();
-    if (userProfil) {
-        if (document.getElementById('profil-nom'))     document.getElementById('profil-nom').value     = userProfil.nom       || '';
-        if (document.getElementById('profil-prenom'))  document.getElementById('profil-prenom').value  = userProfil.prenom    || '';
-        if (document.getElementById('profil-email'))   document.getElementById('profil-email').value   = userProfil.email     || '';
-        if (document.getElementById('profil-tel'))     document.getElementById('profil-tel').value     = userProfil.telephone || '';
-        if (document.getElementById('profil-adresse')) document.getElementById('profil-adresse').value = userProfil.adresse   || '';
-    }
-
     document.getElementById('btn-save-profil')?.addEventListener('click', async () => {
         const msg     = document.getElementById('profil-msg');
         const nom     = document.getElementById('profil-nom')?.value.trim();
         const prenom  = document.getElementById('profil-prenom')?.value.trim();
-        const tel     = document.getElementById('profil-tel')?.value.trim();
+        const tel     = document.getElementById('profil-gsm')?.value.trim();
         const adresse = document.getElementById('profil-adresse')?.value.trim();
         const mdp     = document.getElementById('profil-mdp')?.value;
 
