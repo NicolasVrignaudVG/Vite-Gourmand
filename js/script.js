@@ -466,9 +466,9 @@ async function initCommande() {
         const container = document.getElementById('plats-selection');
         if (!container) return;
         const plats    = menu.plats || [];
-        const entrees  = plats.filter(p => p.typePlat === 'entree');
-        const platsArr = plats.filter(p => p.typePlat === 'plat');
-        const desserts = plats.filter(p => p.typePlat === 'dessert');
+        const entrees  = plats.filter(p => (p.typePlat || p.type) === 'entree');
+        const platsArr = plats.filter(p => (p.typePlat || p.type) === 'plat');
+        const desserts = plats.filter(p => (p.typePlat || p.type) === 'dessert');
 
         const renderCategorie = (titre, liste, type) => `
             <div class="plats-categorie">
