@@ -479,7 +479,7 @@ async function initCommande() {
                 try {
                     const token = localStorage.getItem('jwt_token');
                     const resp  = await fetch(
-                        `http://127.0.0.1:8000/api/commandes/livraison?adresse=${encodeURIComponent(state.adresse)}&ville=${encodeURIComponent(state.ville)}&cp=${encodeURIComponent(state.cp)}`,
+                        `${API_URL}/api/commandes/livraison?adresse=${encodeURIComponent(state.adresse)}&ville=${encodeURIComponent(state.ville)}&cp=${encodeURIComponent(state.cp)}`,
                         { headers: token ? { 'Authorization': `Bearer ${token}` } : {} }
                     );
                     if (resp.ok) { const d = await resp.json(); fraisLivr = d.frais ?? 5; distanceKm = d.distance ?? 0; }
