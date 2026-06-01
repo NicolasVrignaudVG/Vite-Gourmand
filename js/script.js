@@ -479,7 +479,7 @@ async function initCommande() {
                 try {
                     const token = localStorage.getItem('jwt_token');
                     const resp  = await fetch(
-                        `http://127.0.0.1:8000/api/commandes/livraison?adresse=${encodeURIComponent(state.adresse)}&ville=${encodeURIComponent(state.ville)}&cp=${encodeURIComponent(state.cp)}`,
+                        `${API_URL}/api/commandes/livraison?adresse=${encodeURIComponent(state.adresse)}&ville=${encodeURIComponent(state.ville)}&cp=${encodeURIComponent(state.cp)}`,
                         { headers: token ? { 'Authorization': `Bearer ${token}` } : {} }
                     );
                     if (resp.ok) { const d = await resp.json(); fraisLivr = d.frais ?? 5; distanceKm = d.distance ?? 0; }
@@ -951,13 +951,7 @@ async function initEspaceEmploye() {
     chargerAvisEmploye();
     chargerMenusEmploye();
     initHorairesForm();
-    initFormulaireMenu(() => chargerMenusEmploye());
-
-    // Rechargement au clic sur chaque onglet
-    document.querySelector('[data-panel="commandes-emp"]')?.addEventListener('click', () => chargerCommandesEmploye());
-    document.querySelector('[data-panel="avis-emp"]')?.addEventListener('click',      () => chargerAvisEmploye());
-    document.querySelector('[data-panel="menus-emp"]')?.addEventListener('click',     () => chargerMenusEmploye());
-    document.querySelector('[data-panel="plats-emp"]')?.addEventListener('click',     () => initGestionPlats('emp'));
+    document.querySelector('[data-panel="plats-emp"]')?.addEventListener('click', () => { initGestionPlats('emp'); });
 }
 
 // ─────────────────────────────────────────
@@ -1200,14 +1194,7 @@ async function initEspaceAdmin() {
 
     initPasswordToggle('.password-toggle', 'emp-mdp-new');
     initHorairesForm();
-    initFormulaireMenu(() => chargerMenusAdmin());
-
-    // Rechargement au clic sur chaque onglet
-    document.querySelector('[data-panel="commandes-adm"]')?.addEventListener('click', () => chargerCommandesAdmin());
-    document.querySelector('[data-panel="avis-adm"]')?.addEventListener('click',      () => chargerAvisAdmin());
-    document.querySelector('[data-panel="menus-adm"]')?.addEventListener('click',     () => chargerMenusAdmin());
-    document.querySelector('[data-panel="employes-adm"]')?.addEventListener('click',  () => chargerEmployes());
-    document.querySelector('[data-panel="plats-adm"]')?.addEventListener('click',     () => initGestionPlats('adm'));
+    document.querySelector('[data-panel="plats-adm"]')?.addEventListener('click', () => { initGestionPlats('adm'); });
 }
 
 
