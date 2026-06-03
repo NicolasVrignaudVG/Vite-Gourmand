@@ -1682,3 +1682,73 @@ textarea:focus-visible {
 .plat-choix-info span { font-size: .85rem; color: var(--color-text-muted, #666); }
 .plat-choix-info small { display: block; font-size: .8rem; color: var(--color-warning, #d97706); margin-top: .25rem; }
 .plat-choix-check { font-size: 1.2rem; color: var(--color-primary, #c07a3a); opacity: 0; transition: opacity .2s; flex-shrink: 0; }
+
+/* ── Pages légales (mentions, CGV, cookies) ─────────────── */
+.legal-container {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: var(--space-xl, 2rem) var(--space-md, 1rem);
+}
+
+.legal-content {
+    background: var(--color-bg, #fff);
+    border-radius: var(--radius, 8px);
+    padding: var(--space-xl, 2rem);
+    box-shadow: 0 2px 12px rgba(0,0,0,.06);
+}
+
+.legal-content section {
+    margin-bottom: var(--space-lg, 1.5rem);
+    padding-bottom: var(--space-lg, 1.5rem);
+    border-bottom: 1px solid var(--color-border, #e5e7eb);
+}
+
+.legal-content section:last-of-type {
+    border-bottom: none;
+}
+
+.legal-content h2 {
+    font-size: 1.15rem;
+    color: var(--color-primary, #c07a3a);
+    margin-bottom: var(--space-sm, .75rem);
+    font-weight: 600;
+}
+
+.legal-content h3 {
+    font-size: 1rem;
+    color: var(--color-text-dark, #1f2937);
+    margin: var(--space-sm, .75rem) 0 .4rem;
+    font-weight: 600;
+}
+
+.legal-content p {
+    margin-bottom: .6rem;
+    line-height: 1.7;
+    color: var(--color-text, #374151);
+}
+
+.legal-content ul {
+    padding-left: 1.5rem;
+    margin-bottom: .6rem;
+}
+
+.legal-content ul li {
+    margin-bottom: .3rem;
+    line-height: 1.6;
+}
+
+.legal-content a {
+    color: var(--color-primary, #c07a3a);
+    text-decoration: underline;
+}
+
+.legal-content a:hover {
+    color: var(--color-secondary, #8b5e3c);
+}
+
+.legal-date {
+    font-size: .85rem;
+    color: var(--color-text-muted, #6b7280);
+    margin-top: var(--space-lg, 1.5rem);
+    text-align: right;
+}
