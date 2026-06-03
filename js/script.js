@@ -1645,3 +1645,45 @@ function initPasswordToggle(selector, inputId) {
         btn.textContent = isPassword ? '🙈' : '👁️';
     });
 }
+
+// ─────────────────────────────────────────
+// HORAIRES FOOTER — chargement dynamique
+// ─────────────────────────────────────────
+async function chargerHorairesFooter() {
+    const container = document.querySelector('.footer-horaires');
+    if (!container) return;
+    try {
+        const horaires = await fetch(`${API_URL}/api/horaires`).then(r => r.ok ? r.json() : null);
+        if (!horaires || !horaires.length) return;
+
+        const jours = ['', 'Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
+
+        // Grouper par jour
+        const parJour = {};
+        horaires.forEach(h => {
+            if (!parJour[h.jour]) parJour[h.jour] = [];
+            parJour[h.jour].push(h);
+        });
+
+        let html = '<h3>HORAIRES D'OUVERTURE</h3>';
+        Object.keys(parJour).sort().forEach(jour => {
+            const services = parJour[jour];
+            const ouverts = services.filter(s => !s.ferme);
+            if (!ouverts.length) {
+                html += `<p>${jours[jour] || 'Jour ' + jour} : Fermé</p>`;
+            } else {
+                const plages = ouverts.map(s => `${s.heureOuverture || s.heure_ouverture}-${s.heureFermeture || s.heure_fermeture}`).join(' / ');
+                html += `<p>${jours[jour] || 'Jour ' + jour} : ${plages}</p>`;
+            }
+        });
+
+        container.innerHTML = html;
+    } catch (e) {
+        // Garder les horaires statiques en cas d'erreur
+    }
+}
+
+// Charger les horaires footer au démarrage
+document.addEventListener('DOMContentLoaded', () => {
+    chargerHorairesFooter();
+});
