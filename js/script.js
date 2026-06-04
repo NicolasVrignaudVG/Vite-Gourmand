@@ -620,7 +620,7 @@ async function initCommande() {
                 ville_livraison:   state.ville,
                 cp_livraison:      state.cp,
             });
-            document.getElementById('confirm-ref').textContent = `Référence : ${result.numero_commande}`;
+            document.getElementById('confirm-ref').textContent = `Référence : ${result.numeroCommande || result.numero_commande || result.id}`;
             sessionStorage.removeItem('commandeMenu');
             sessionStorage.removeItem('selectedMenuId');
             goToStep('confirm');
