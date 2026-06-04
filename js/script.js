@@ -1396,6 +1396,8 @@ function initFormulaireMenu(onSaved) {
         document.getElementById('menu-form-min').value         = menu?.nombre_personne_minimum || '';
         document.getElementById('menu-form-stock').value       = menu?.quantite_restante || '';
         document.getElementById('menu-form-image').value       = menu?.image_principale || '';
+        if (document.getElementById('menu-form-theme'))  document.getElementById('menu-form-theme').value  = menu?.theme  || '';
+        if (document.getElementById('menu-form-regime')) document.getElementById('menu-form-regime').value = menu?.regime || '';
         const preview = document.getElementById('menu-form-preview');
         if (preview) { preview.src = menu?.image_principale || ''; preview.style.display = menu?.image_principale ? 'block' : 'none'; }
         const fileInput = document.getElementById('menu-form-image-file');
@@ -1441,7 +1443,9 @@ function initFormulaireMenu(onSaved) {
             } catch (err) { showMsg(msg, 'Erreur upload : ' + err.message, 'error'); return; }
         }
 
-        const body = { titre, description, conditions, prix_par_personne: prix, nombre_personne_minimum: min, quantite_restante: stock };
+        const theme  = document.getElementById('menu-form-theme')?.value.trim()  || '';
+        const regime = document.getElementById('menu-form-regime')?.value.trim() || '';
+        const body = { titre, description, conditions, prix_par_personne: prix, nombre_personne_minimum: min, quantite_restante: stock, theme, regime };
         if (imagePath) body.image = imagePath;
 
         try {
