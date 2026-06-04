@@ -1439,7 +1439,7 @@ function initFormulaireMenu(onSaved) {
         if (fileInput?.files[0]) {
             try {
                 const uploaded = await Upload.image(fileInput.files[0]);
-                imagePath = uploaded.url;
+                imagePath = `${API_URL}/${uploaded.url}`;
             } catch (err) { showMsg(msg, 'Erreur upload : ' + err.message, 'error'); return; }
         }
 
