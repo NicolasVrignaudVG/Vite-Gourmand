@@ -1,4 +1,26 @@
 // ═══════════════════════════════════════════════════════════
+// GESTIONNAIRES D'ERREURS GLOBAUX
+// ═══════════════════════════════════════════════════════════
+
+// Erreurs JS non catchées
+window.onerror = function(message, source, lineno, colno, error) {
+    console.error('[Erreur globale]', { message, source, lineno, colno, error });
+    return true; // Empêche l'affichage de l'erreur dans la console navigateur
+};
+
+// Promesses rejetées non catchées
+window.addEventListener('unhandledrejection', function(event) {
+    console.error('[Promesse rejetée]', event.reason);
+    // Si c'est une erreur 401, rediriger vers la connexion
+    if (event.reason?.message?.includes('Session expirée') || event.reason?.status === 401) {
+        localStorage.removeItem('jwt_token');
+        localStorage.removeItem('user');
+        window.location.hash = 'connexion';
+    }
+    event.preventDefault();
+});
+
+// ═══════════════════════════════════════════════════════════
 // script.js — Vite & Gourmand
 // Connecté à l'API Symfony via api.js
 // ═══════════════════════════════════════════════════════════
