@@ -387,6 +387,8 @@ async function initCommande() {
     const state = {
         etape: 1,
         menuId: sessionStorage.getItem('commandeMenu') || null,
+        menusSelectionnes: [], // [{menuId, menuData, nbPersonnes, platsChoisis}]
+        menuPlatsIndex: 0,     // index du menu en cours de sélection de plats
         nbPersonnes: 1,
         nom: user?.nom || '', prenom: user?.prenom || '',
         email: user?.email || '', gsm: user?.telephone || '',
@@ -444,7 +446,7 @@ async function initCommande() {
         try {
             const menus = await Menus.getAll();
             container.innerHTML = menus.map(menu => `
-                <div class="menu-choix-card ${state.menuId == menu.id ? 'selected' : ''}" data-menu-id="${menu.id}" data-min="${menu.nombre_personne_minimum}">
+                <div class="menu-choix-card ${state.menusSelectionnes.find(m => m.menuId == menu.id) ? 'selected' : ''}" data-menu-id="${menu.id}" data-min="${menu.nombre_personne_minimum}">
                     <img src="${menu.image_principale || ''}" alt="${sanitize(menu.titre)}">
                     <div class="menu-choix-info">
                         <div class="menu-tags"><span class="tag tag-theme">${menu.theme || ''}</span></div>
@@ -457,10 +459,17 @@ async function initCommande() {
             `).join('');
             container.querySelectorAll('.menu-choix-card').forEach(card => {
                 card.addEventListener('click', () => {
-                    container.querySelectorAll('.menu-choix-card').forEach(c => c.classList.remove('selected'));
-                    card.classList.add('selected');
-                    state.menuId      = card.dataset.menuId;
-                    state.nbPersonnes = parseInt(card.dataset.min);
+                    card.classList.toggle('selected');
+                    const menuId = card.dataset.menuId;
+                    if (card.classList.contains('selected')) {
+                        if (!state.menusSelectionnes.find(m => m.menuId == menuId)) {
+                            state.menusSelectionnes.push({ menuId, menuData: null, nbPersonnes: parseInt(card.dataset.min), platsChoisis: [] });
+                        }
+                    } else {
+                        state.menusSelectionnes = state.menusSelectionnes.filter(m => m.menuId != menuId);
+                    }
+                    // Rétrocompat
+                    state.menuId = state.menusSelectionnes[0]?.menuId || null;
                 });
             });
         } catch (err) {
@@ -471,12 +480,18 @@ async function initCommande() {
     document.getElementById('btn-step2-prev')?.addEventListener('click', () => goToStep(1));
     document.getElementById('btn-step2-next')?.addEventListener('click', async () => {
         const msg = document.getElementById('step2-msg');
-        if (!state.menuId) { showMsg(msg, 'Veuillez sélectionner un menu.', 'error'); return; }
+        if (!state.menusSelectionnes.length) { showMsg(msg, 'Veuillez sélectionner au moins un menu.', 'error'); return; }
         try {
-            const menu = await Menus.getById(state.menuId);
-            state.menuData    = menu;
-            state.nbPersonnes = menu.nombre_personne_minimum;
-            await buildStepPlats(menu);
+            // Charger les données de tous les menus sélectionnés
+            for (let ms of state.menusSelectionnes) {
+                if (!ms.menuData) {
+                    ms.menuData = await Menus.getById(ms.menuId);
+                    ms.nbPersonnes = ms.menuData.nombre_personne_minimum;
+                }
+            }
+            // Commencer la sélection de plats pour le premier menu
+            state.menuPlatsIndex = 0;
+            await buildStepPlats(state.menusSelectionnes[0].menuData, 0);
             goToStep('plats');
         } catch (err) {
             showMsg(msg, err.message, 'error');
@@ -484,9 +499,10 @@ async function initCommande() {
     });
 
 
-    async function buildStepPlats(menu) {
+    async function buildStepPlats(menu, index) {
         const container = document.getElementById('plats-selection');
         if (!container) return;
+        const total    = state.menusSelectionnes.length;
         const plats    = menu.plats || [];
         const entrees  = plats.filter(p => (p.typePlat || p.type) === 'entree');
         const platsArr = plats.filter(p => (p.typePlat || p.type) === 'plat');
@@ -512,6 +528,7 @@ async function initCommande() {
         `;
 
         container.innerHTML = `
+            ${total > 1 ? `<div style="background:var(--color-primary,#c07a3a);color:#fff;padding:.4rem .8rem;border-radius:20px;display:inline-block;font-size:.85rem;margin-bottom:.75rem">Menu ${index + 1} / ${total}</div>` : ''}
             <h3 style="margin-bottom:.5rem">Menu : <em>${sanitize(menu.titre)}</em></h3>
             <p style="color:var(--color-text-muted);margin-bottom:1.5rem">Choisissez un plat par catégorie</p>
             ${entrees.length  ? renderCategorie('🥗 Entrée',  entrees,  'entree')  : ''}
@@ -521,20 +538,34 @@ async function initCommande() {
     }
 
     document.getElementById('btn-plats-prev')?.addEventListener('click', () => goToStep(2));
-    document.getElementById('btn-plats-next')?.addEventListener('click', () => {
+    document.getElementById('btn-plats-next')?.addEventListener('click', async () => {
         const msg       = document.getElementById('plats-msg');
         const entreeId  = document.querySelector('input[name="plat-entree"]:checked')?.value;
         const platId    = document.querySelector('input[name="plat-plat"]:checked')?.value;
         const dessertId = document.querySelector('input[name="plat-dessert"]:checked')?.value;
 
-        if (!entreeId || !platId || !dessertId) {
-            showMsg(msg, 'Veuillez choisir une entrée, un plat et un dessert.', 'error');
-            return;
+        const currentMenu = state.menusSelectionnes[state.menuPlatsIndex];
+        if (currentMenu) {
+            const plats = [];
+            if (entreeId)  plats.push(parseInt(entreeId));
+            if (platId)    plats.push(parseInt(platId));
+            if (dessertId) plats.push(parseInt(dessertId));
+            currentMenu.platsChoisis = plats;
         }
 
-        state.platsChoisis = [parseInt(entreeId), parseInt(platId), parseInt(dessertId)];
-        buildStep3();
-        goToStep(3);
+        // Passer au menu suivant ou aller au récapitulatif
+        const nextIndex = state.menuPlatsIndex + 1;
+        if (nextIndex < state.menusSelectionnes.length) {
+            state.menuPlatsIndex = nextIndex;
+            await buildStepPlats(state.menusSelectionnes[nextIndex].menuData, nextIndex);
+        } else {
+            // Rétrocompat
+            state.platsChoisis = state.menusSelectionnes[0]?.platsChoisis || [];
+            state.menuData     = state.menusSelectionnes[0]?.menuData || null;
+            state.nbPersonnes  = state.menusSelectionnes[0]?.nbPersonnes || 1;
+            buildStep3();
+            goToStep(3);
+        }
     });
 
     async function buildStep3() {
@@ -612,8 +643,14 @@ async function initCommande() {
         const msg = document.getElementById('step3-msg');
         showMsg(msg, 'Validation en cours…', 'success');
         try {
+            const menusCommandes = state.menusSelectionnes.map(ms => ({
+                menu_id:          parseInt(ms.menuId),
+                nombre_personnes: ms.nbPersonnes,
+                plats_choisis:    ms.platsChoisis || [],
+            }));
             const result = await Commandes.create({
-                menu_id:           parseInt(state.menuId),
+                menus_commandes:   menusCommandes,
+                menu_id:           parseInt(state.menuId), // rétrocompat
                 nombre_personnes:  state.nbPersonnes,
                 date_prestation:   `${state.date} ${state.heure}:00`,
                 adresse_livraison: state.adresse,
