@@ -1398,6 +1398,28 @@ function initFormulaireMenu(onSaved) {
         document.getElementById('menu-form-image').value       = menu?.image_principale || '';
         if (document.getElementById('menu-form-theme'))  document.getElementById('menu-form-theme').value  = menu?.theme  || '';
         if (document.getElementById('menu-form-regime')) document.getElementById('menu-form-regime').value = menu?.regime || '';
+
+        // Charger les plats disponibles
+        const platsContainer = document.getElementById('menu-form-plats');
+        if (platsContainer) {
+            try {
+                const tousPlats = await apiFetch('/api/plats');
+                const platsMenu = menu?.plats?.map(p => p.id) || [];
+                const categories = { entree: 'Entrées', plat: 'Plats', dessert: 'Desserts' };
+                let html = '';
+                ['entree', 'plat', 'dessert'].forEach(type => {
+                    const liste = tousPlats.filter(p => (p.type || p.typePlat) === type);
+                    if (!liste.length) return;
+                    html += `<div class="plats-categorie" style="margin-bottom:.75rem"><strong>${categories[type]}</strong><div style="display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.25rem">`;
+                    liste.forEach(p => {
+                        const checked = platsMenu.includes(p.id) ? 'checked' : '';
+                        html += `<label style="display:flex;align-items:center;gap:.3rem;cursor:pointer"><input type="checkbox" name="menu-plat" value="${p.id}" ${checked}> ${sanitize(p.nom)}</label>`;
+                    });
+                    html += '</div></div>';
+                });
+                platsContainer.innerHTML = html;
+            } catch(e) { platsContainer.innerHTML = '<p>Erreur chargement plats</p>'; }
+        }
         const preview = document.getElementById('menu-form-preview');
         if (preview) { preview.src = menu?.image_principale || ''; preview.style.display = menu?.image_principale ? 'block' : 'none'; }
         const fileInput = document.getElementById('menu-form-image-file');
@@ -1449,8 +1471,16 @@ function initFormulaireMenu(onSaved) {
         if (imagePath) body.image = imagePath;
 
         try {
+            let menuId = id;
             if (id) { await Menus.update(id, body); showMsg(msg, 'Menu modifié.', 'success'); }
-            else    { await Menus.create(body);    showMsg(msg, 'Menu créé.', 'success'); }
+            else    { const res = await Menus.create(body); menuId = res.id; showMsg(msg, 'Menu créé.', 'success'); }
+
+            // Associer les plats sélectionnés
+            const platIds = Array.from(document.querySelectorAll('input[name="menu-plat"]:checked')).map(el => parseInt(el.value));
+            if (menuId && platIds.length >= 0) {
+                await apiFetch(`/api/menus/${menuId}/plats`, { method: 'POST', body: JSON.stringify({ plat_ids: platIds }) });
+            }
+
             setTimeout(() => { modal.style.display = 'none'; if (onSaved) onSaved(); }, 1000);
         } catch (err) { showMsg(msg, err.message, 'error'); }
     });
