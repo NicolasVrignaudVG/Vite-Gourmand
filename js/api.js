@@ -95,8 +95,14 @@ const Auth = {
     },
 
     getUser() {
-        const u = localStorage.getItem('user');
-        return u ? JSON.parse(u) : null;
+        try {
+            const u = localStorage.getItem('user');
+            if (!u || u === 'undefined' || u === 'null') return null;
+            return JSON.parse(u);
+        } catch(e) {
+            localStorage.removeItem('user');
+            return null;
+        }
     },
 
     hasRole(role) {
