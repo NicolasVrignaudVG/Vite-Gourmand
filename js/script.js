@@ -1665,7 +1665,7 @@ async function chargerHorairesFooter() {
             parJour[h.jour].push(h);
         });
 
-        let html = '<h3>HORAIRES D'OUVERTURE</h3>';
+        let html = '<h3>HORAIRES D\'OUVERTURE</h3>';
         Object.keys(parJour).sort().forEach(jour => {
             const services = parJour[jour];
             const ouverts = services.filter(s => !s.ferme);
