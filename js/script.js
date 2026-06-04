@@ -1084,10 +1084,19 @@ async function initEspaceEmploye() {
                         </div>
                     </div>
                     <div class="menu-gestion-actions">
+                        <button class="btn-edit-menu btn-step-next">✏️ Modifier</button>
                         <button class="btn-delete-menu">🗑️ Désactiver</button>
                     </div>
                 </div>
             `).join('');
+
+            list.querySelectorAll('.btn-edit-menu').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const item = btn.closest('.menu-gestion-item');
+                    const menu = await Menus.getById(item.dataset.id);
+                    ouvrirModalMenu(menu);
+                });
+            });
 
             list.querySelectorAll('.btn-delete-menu').forEach(btn => {
                 btn.addEventListener('click', async () => {
@@ -1434,6 +1443,8 @@ function initFormulaireMenu(onSaved) {
         } catch (err) { showMsg(msg, err.message, 'error'); }
     });
 
+    // Exposer ouvrirModal globalement pour les boutons modifier
+    window.ouvrirModalMenu = ouvrirModal;
     return ouvrirModal;
 }
 
