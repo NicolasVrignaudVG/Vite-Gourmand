@@ -1683,7 +1683,10 @@ async function chargerHorairesFooter() {
     }
 }
 
-// Charger les horaires footer au démarrage
+// Charger les horaires footer — appel direct + retry après chargement routeur
 document.addEventListener('DOMContentLoaded', () => {
     chargerHorairesFooter();
+    // Retry après 1s pour attendre le routeur
+    setTimeout(chargerHorairesFooter, 1000);
+    setTimeout(chargerHorairesFooter, 2500);
 });
