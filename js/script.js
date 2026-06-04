@@ -1387,7 +1387,7 @@ function initFormulaireMenu(onSaved) {
     const msg       = document.getElementById('menu-form-msg');
     if (!modal) return;
 
-    function ouvrirModal(menu) {
+    async function ouvrirModal(menu) {
         document.getElementById('menu-form-id').value          = menu?.id || '';
         document.getElementById('menu-form-titre').value       = menu?.titre || '';
         document.getElementById('menu-form-description').value = menu?.description || '';
