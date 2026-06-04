@@ -528,15 +528,41 @@ async function initCommande() {
             </div>
         `;
 
+        const currentMs = state.menusSelectionnes[index];
         container.innerHTML = `
             ${total > 1 ? `<div style="background:var(--color-primary,#c07a3a);color:#fff;padding:.4rem .8rem;border-radius:20px;display:inline-block;font-size:.85rem;margin-bottom:.75rem">Menu ${index + 1} / ${total}</div>` : ''}
             <h3 style="margin-bottom:.5rem">Menu : <em>${sanitize(menu.titre)}</em></h3>
+            <div style="display:flex;align-items:center;gap:.75rem;margin-bottom:1rem;background:#fef9f5;padding:.6rem 1rem;border-radius:8px;border:1px solid var(--color-border,#e5e7eb)">
+                <span style="color:var(--color-text-muted)">Nombre de personnes :</span>
+                <button class="btn-pers" id="btn-plats-pers-moins" style="width:28px;height:28px;font-size:1rem">−</button>
+                <span id="plats-nb-personnes" style="font-weight:600;min-width:1.5rem;text-align:center">${currentMs?.nbPersonnes || menu.nombre_personne_minimum}</span>
+                <button class="btn-pers" id="btn-plats-pers-plus" style="width:28px;height:28px;font-size:1rem">+</button>
+                <span style="font-size:.8rem;color:var(--color-text-muted)">(min. ${menu.nombre_personne_minimum})</span>
+            </div>
             <p style="color:var(--color-text-muted);margin-bottom:1.5rem">Choisissez un plat par catégorie</p>
             ${entrees.length  ? renderCategorie('🥗 Entrée',  entrees,  'entree')  : ''}
             ${platsArr.length ? renderCategorie('🍽️ Plat',    platsArr, 'plat')    : ''}
             ${desserts.length ? renderCategorie('🍮 Dessert', desserts, 'dessert') : ''}
         `;
     }
+
+    // Délégation d'événements pour les boutons +/- de personnes dans step-plats
+    document.getElementById('plats-selection')?.addEventListener('click', (e) => {
+        const ms = state.menusSelectionnes[state.menuPlatsIndex];
+        if (!ms) return;
+        const menu = ms.menuData;
+        const display = document.getElementById('plats-nb-personnes');
+        if (e.target.id === 'btn-plats-pers-moins') {
+            if (ms.nbPersonnes > menu.nombre_personne_minimum) {
+                ms.nbPersonnes--;
+                if (display) display.textContent = ms.nbPersonnes;
+            }
+        }
+        if (e.target.id === 'btn-plats-pers-plus') {
+            ms.nbPersonnes++;
+            if (display) display.textContent = ms.nbPersonnes;
+        }
+    });
 
     document.getElementById('btn-plats-prev')?.addEventListener('click', () => goToStep(2));
     document.getElementById('btn-plats-next')?.addEventListener('click', async () => {
