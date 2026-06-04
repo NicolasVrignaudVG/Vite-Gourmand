@@ -1110,6 +1110,7 @@ async function initEspaceEmploye() {
     chargerAvisEmploye();
     chargerMenusEmploye();
     initHorairesForm();
+    initFormulaireMenu(() => chargerMenusEmploye());
     document.querySelector('[data-panel="plats-emp"]')?.addEventListener('click', () => { initGestionPlats('emp'); });
 }
 
@@ -1323,6 +1324,7 @@ async function initEspaceAdmin() {
     chargerMenusAdmin();
     chargerStats();
     chargerEmployes();
+    initFormulaireMenu(() => chargerMenusAdmin());
 
     document.getElementById('btn-apply-stats')?.addEventListener('click', () => {
         const filters = {};
