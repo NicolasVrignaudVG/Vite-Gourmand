@@ -1519,18 +1519,80 @@ async function initGestionPlats(prefixe) {
 // ─────────────────────────────────────────
 // HORAIRES — formulaire partagé
 // ─────────────────────────────────────────
-function initHorairesForm() {
+async function initHorairesForm() {
     const container = document.getElementById('horaires-list');
     if (!container) return;
-    container.innerHTML = JOURS.map((jour, i) => `
-        <div class="horaire-row">
+
+    // Charger les horaires depuis l'API
+    let horairesData = [];
+    try {
+        horairesData = await apiFetch('/api/horaires');
+    } catch(e) {
+        container.innerHTML = '<p>Erreur de chargement des horaires.</p>';
+        return;
+    }
+
+    // Grouper par jour
+    const parJour = {};
+    horairesData.forEach(h => {
+        if (!parJour[h.jour]) parJour[h.jour] = [];
+        parJour[h.jour].push(h);
+    });
+
+    container.innerHTML = JOURS.map((jour, i) => {
+        const jourNum = i + 1;
+        const services = parJour[jourNum] || [];
+        const midi    = services.find(s => s.service === 'midi');
+        const soir    = services.find(s => s.service === 'soir');
+        const jour1   = services.find(s => s.service === 'jour');
+        const h1      = midi || jour1 || services[0];
+        const h2      = soir || services[1];
+
+        return `
+        <div class="horaire-row" data-jour="${jourNum}">
             <span class="horaire-jour">${jour}</span>
-            <div class="input-group"><label>Midi</label><div class="input-wrapper"><input type="text" class="horaire-midi" value="${HORAIRES_DEFAULT[i].midi}"></div></div>
-            <div class="input-group"><label>Soir</label><div class="input-wrapper"><input type="text" class="horaire-soir" value="${HORAIRES_DEFAULT[i].soir}" placeholder="Fermé si vide"></div></div>
-        </div>
-    `).join('');
-    document.getElementById('btn-save-horaires')?.addEventListener('click', () => {
-        alert('Horaires enregistrés !');
+            ${h1 ? `<div class="input-group">
+                <label>${h1.service === 'midi' ? 'Midi' : 'Journée'}</label>
+                <div class="input-wrapper">
+                    <input type="text" class="horaire-ouverture" data-id="${h1.id}"
+                        value="${h1.ferme ? '' : (h1.heureOuverture || '') + '-' + (h1.heureFermeture || '')}"
+                        placeholder="HH:MM-HH:MM ou vide si fermé">
+                </div>
+            </div>` : ''}
+            ${h2 ? `<div class="input-group">
+                <label>Soir</label>
+                <div class="input-wrapper">
+                    <input type="text" class="horaire-ouverture" data-id="${h2.id}"
+                        value="${h2.ferme ? '' : (h2.heureOuverture || '') + '-' + (h2.heureFermeture || '')}"
+                        placeholder="HH:MM-HH:MM ou vide si fermé">
+                </div>
+            </div>` : ''}
+        </div>`;
+    }).join('');
+
+    document.getElementById('btn-save-horaires')?.addEventListener('click', async () => {
+        const inputs = container.querySelectorAll('.horaire-ouverture');
+        const updates = [];
+
+        inputs.forEach(input => {
+            const id  = parseInt(input.dataset.id);
+            const val = input.value.trim();
+            if (val) {
+                const parts = val.split('-');
+                updates.push({ id, heureOuverture: parts[0] || null, heureFermeture: parts[1] || null, ferme: false });
+            } else {
+                updates.push({ id, heureOuverture: null, heureFermeture: null, ferme: true });
+            }
+        });
+
+        try {
+            await apiFetch('/api/horaires', { method: 'PUT', body: JSON.stringify(updates) });
+            // Mettre à jour le footer
+            chargerHorairesFooter();
+            alert('Horaires enregistrés avec succès !');
+        } catch(err) {
+            alert('Erreur : ' + err.message);
+        }
     });
 }
 
