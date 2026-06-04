@@ -1313,9 +1313,17 @@ async function initEspaceAdmin() {
                         <p>${m.prix_par_personne}€ / pers. — Min ${m.nombre_personne_minimum} pers. — Stock : ${m.quantite_restante}</p>
                     </div>
                     <div class="menu-gestion-actions">
+                        <button class="btn-edit-menu btn-step-next">✏️ Modifier</button>
                         <button class="btn-delete-menu">🗑️ Désactiver</button>
                     </div>
                 </div>`).join('');
+            list.querySelectorAll('.btn-edit-menu').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const item = btn.closest('.menu-gestion-item');
+                    const menu = await Menus.getById(item.dataset.id);
+                    ouvrirModalMenu(menu);
+                });
+            });
             list.querySelectorAll('.btn-delete-menu').forEach(btn => {
                 btn.addEventListener('click', async () => {
                     const item = btn.closest('.menu-gestion-item');
