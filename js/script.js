@@ -1410,10 +1410,10 @@ function initFormulaireMenu(onSaved) {
                 ['entree', 'plat', 'dessert'].forEach(type => {
                     const liste = tousPlats.filter(p => (p.type || p.typePlat) === type);
                     if (!liste.length) return;
-                    html += `<div class="plats-categorie" style="margin-bottom:.75rem"><strong>${categories[type]}</strong><div style="display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.25rem">`;
+                    html += `<div class="plats-categorie"><strong>${categories[type]}</strong><div>`;
                     liste.forEach(p => {
                         const checked = platsMenu.includes(p.id) ? 'checked' : '';
-                        html += `<label style="display:flex;align-items:center;gap:.3rem;cursor:pointer"><input type="checkbox" name="menu-plat" value="${p.id}" ${checked}> ${sanitize(p.nom)}</label>`;
+                        html += `<label><input type="checkbox" name="menu-plat" value="${p.id}" ${checked}> ${sanitize(p.nom)}</label>`;
                     });
                     html += '</div></div>';
                 });

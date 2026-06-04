@@ -1752,3 +1752,45 @@ textarea:focus-visible {
     margin-top: var(--space-lg, 1.5rem);
     text-align: right;
 }
+
+/* ── Sélection plats dans formulaire menu ───────────────── */
+#menu-form-plats .plats-categorie { margin-bottom: 1rem; }
+#menu-form-plats .plats-categorie strong {
+    display: block;
+    font-size: .9rem;
+    color: var(--color-primary, #c07a3a);
+    text-transform: uppercase;
+    letter-spacing: .05em;
+    margin-bottom: .5rem;
+    padding-bottom: .25rem;
+    border-bottom: 1px solid var(--color-border, #e5e7eb);
+}
+#menu-form-plats label {
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    padding: .4rem .6rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: .875rem;
+    transition: background .15s;
+    width: calc(33% - .5rem);
+    min-width: 160px;
+}
+#menu-form-plats label:hover { background: #fef9f5; }
+#menu-form-plats label:has(input:checked) {
+    background: #fef0e3;
+    color: var(--color-primary, #c07a3a);
+    font-weight: 500;
+}
+#menu-form-plats input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    accent-color: var(--color-primary, #c07a3a);
+    flex-shrink: 0;
+}
+#menu-form-plats > div {
+    display: flex;
+    flex-wrap: wrap;
+    gap: .35rem;
+}
