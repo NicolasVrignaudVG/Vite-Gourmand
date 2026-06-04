@@ -384,10 +384,11 @@ async function initCommande() {
     }
 
     const user = Auth.getUser();
+    const savedMenuId = sessionStorage.getItem('commandeMenu') || null;
     const state = {
         etape: 1,
-        menuId: sessionStorage.getItem('commandeMenu') || null,
-        menusSelectionnes: [], // [{menuId, menuData, nbPersonnes, platsChoisis}]
+        menuId: savedMenuId,
+        menusSelectionnes: savedMenuId ? [{ menuId: savedMenuId, menuData: null, nbPersonnes: 1, platsChoisis: [] }] : [],
         menuPlatsIndex: 0,     // index du menu en cours de sélection de plats
         nbPersonnes: 1,
         nom: user?.nom || '', prenom: user?.prenom || '',
