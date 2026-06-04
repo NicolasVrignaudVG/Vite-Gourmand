@@ -577,10 +577,22 @@ async function initCommande() {
 
         async function updatePrix() {
             const nb         = state.nbPersonnes;
+            // Calcul prix pour multi-menus
+            const totalMenus = state.menusSelectionnes.length;
+            let prixMenu = 0;
+            if (totalMenus > 1) {
+                prixMenu = state.menusSelectionnes.reduce((sum, ms) => {
+                    const m = ms.menuData;
+                    if (!m) return sum;
+                    const seuil = m.nombre_personne_minimum + 5;
+                    const reduc = ms.nbPersonnes >= seuil ? 0.9 : 1;
+                    return sum + m.prix_par_personne * reduc * ms.nbPersonnes;
+                }, 0);
+            }
             const seuilReduc = menu.nombre_personne_minimum + 5;
             const hasReduc   = nb >= seuilReduc;
             const prixUnit   = hasReduc ? menu.prix_par_personne * 0.9 : menu.prix_par_personne;
-            const prixMenu   = prixUnit * nb;
+            if (totalMenus <= 1) prixMenu = prixUnit * nb;
             const horsCity   = state.ville.toLowerCase().trim() !== 'bordeaux';
             let fraisLivr = 0, distanceKm = 0;
             if (horsCity) {
@@ -621,10 +633,22 @@ async function initCommande() {
             `;
 
             const recapMenu = document.getElementById('recap-menu');
-            if (recapMenu) recapMenu.innerHTML = `
-                <div class="recap-line"><span>Menu</span><strong>${sanitize(menu.titre)}</strong></div>
-                <div class="recap-line"><span>Prix/pers.</span><span>${prixUnit.toFixed(2)}€</span></div>
-            `;
+            if (recapMenu) {
+                const total_menus = state.menusSelectionnes.length;
+                if (total_menus > 1) {
+                    recapMenu.innerHTML = state.menusSelectionnes.map(ms => `
+                        <div class="recap-line"><span>Menu</span><strong>${sanitize(ms.menuData?.titre || '–')}</strong></div>
+                        <div class="recap-line"><span>Personnes</span><span>${ms.nbPersonnes}</span></div>
+                        <div class="recap-line"><span>Prix</span><span>${((ms.menuData?.prix_par_personne || 0) * ms.nbPersonnes).toFixed(2)}€</span></div>
+                        <hr style="border:none;border-top:1px solid var(--color-border,#e5e7eb);margin:.5rem 0">
+                    `).join('');
+                } else {
+                    recapMenu.innerHTML = `
+                        <div class="recap-line"><span>Menu</span><strong>${sanitize(menu.titre)}</strong></div>
+                        <div class="recap-line"><span>Prix/pers.</span><span>${prixUnit.toFixed(2)}€</span></div>
+                    `;
+                }
+            }
 
             const recapCond = document.getElementById('recap-conditions');
             if (recapCond) recapCond.innerHTML = `<h3 class="detail-section-title">📋 Conditions</h3><p>${menu.conditions || ''}</p>`;
@@ -639,7 +663,12 @@ async function initCommande() {
         });
     }
 
-    document.getElementById('btn-step3-prev')?.addEventListener('click', () => goToStep(2));
+    document.getElementById('btn-step3-prev')?.addEventListener('click', async () => {
+        const lastIndex = state.menusSelectionnes.length - 1;
+        state.menuPlatsIndex = lastIndex;
+        await buildStepPlats(state.menusSelectionnes[lastIndex].menuData, lastIndex);
+        goToStep('plats');
+    });
     document.getElementById('btn-valider-commande')?.addEventListener('click', async () => {
         const msg = document.getElementById('step3-msg');
         showMsg(msg, 'Validation en cours…', 'success');
