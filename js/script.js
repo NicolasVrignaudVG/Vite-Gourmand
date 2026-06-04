@@ -13,7 +13,6 @@ window.addEventListener('unhandledrejection', function(event) {
     console.error('[Promesse rejetée]', event.reason);
     // Si c'est une erreur 401, rediriger vers la connexion
     if (event.reason?.message?.includes('Session expirée') || event.reason?.status === 401) {
-        localStorage.removeItem('jwt_token');
         localStorage.removeItem('user');
         window.location.hash = 'connexion';
     }
@@ -623,13 +622,8 @@ async function initCommande() {
             let fraisLivr = 0, distanceKm = 0;
             if (horsCity) {
                 try {
-                    const token = localStorage.getItem('jwt_token');
-                    const resp  = await fetch(
-                        `${API_URL}/api/commandes/livraison?adresse=${encodeURIComponent(state.adresse)}&ville=${encodeURIComponent(state.ville)}&cp=${encodeURIComponent(state.cp)}`,
-                        { headers: token ? { 'Authorization': `Bearer ${token}` } : {} }
-                    );
-                    if (resp.ok) { const d = await resp.json(); fraisLivr = d.frais ?? 5; distanceKm = d.distance ?? 0; }
-                    else { fraisLivr = 5; }
+                    const d = await apiFetch(`/api/commandes/livraison?adresse=${encodeURIComponent(state.adresse)}&ville=${encodeURIComponent(state.ville)}&cp=${encodeURIComponent(state.cp)}`);
+                    fraisLivr = d.frais ?? 5; distanceKm = d.distance ?? 0;
                 } catch(e) { fraisLivr = 5; }
             }
             const total = prixMenu + fraisLivr;

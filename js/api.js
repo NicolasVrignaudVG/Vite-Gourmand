@@ -11,22 +11,18 @@ const API_URL = window.location.hostname === 'localhost'
 // UTILITAIRE — fetch avec JWT automatique
 // ─────────────────────────────────────────
 async function apiFetch(endpoint, options = {}) {
-    const token = localStorage.getItem('jwt_token');
-
     const headers = {
         'Content-Type': 'application/json',
-        ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
         ...(options.headers || {}),
     };
 
     const response = await fetch(`${API_URL}${endpoint}`, {
         ...options,
         headers,
+        credentials: 'include',
     });
 
     if (response.status === 401) {
-        // Token expiré → déconnexion
-        localStorage.removeItem('jwt_token');
         localStorage.removeItem('user');
         window.location.hash = 'connexion';
         throw new Error('Session expirée, veuillez vous reconnecter.');
@@ -52,9 +48,8 @@ const Auth = {
             method: 'POST',
             body: JSON.stringify({ email, password }),
         });
-        localStorage.setItem('jwt_token', data.token);
-        // Récupère les infos utilisateur
-        const user = await Auth.me();
+        // Le cookie HttpOnly est posé automatiquement par le serveur
+        const user = data.user;
         localStorage.setItem('user', JSON.stringify(user));
         return user;
     },
@@ -89,14 +84,14 @@ const Auth = {
         });
     },
 
-    logout() {
-        localStorage.removeItem('jwt_token');
+    async logout() {
+        try { await apiFetch('/api/auth/logout', { method: 'POST' }); } catch(e) {}
         localStorage.removeItem('user');
         window.location.hash = 'home';
     },
 
     isLoggedIn() {
-        return !!localStorage.getItem('jwt_token');
+        return !!localStorage.getItem('user');
     },
 
     getUser() {
@@ -243,12 +238,11 @@ const Admin = {
 // ─────────────────────────────────────────
 const Upload = {
     async image(file) {
-        const token    = localStorage.getItem('jwt_token');
         const formData = new FormData();
         formData.append('image', file);
         const response = await fetch(`${API_URL}/api/upload/image`, {
             method: 'POST',
-            headers: token ? { 'Authorization': `Bearer ${token}` } : {},
+            credentials: 'include',
             body: formData,
         });
         if (!response.ok) {
