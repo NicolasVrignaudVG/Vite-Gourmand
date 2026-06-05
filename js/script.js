@@ -457,8 +457,8 @@ async function initCommande() {
                         <div class="menu-choix-meta"><span>Min ${menu.nombre_personne_minimum} pers.</span><strong>${menu.prix_par_personne}€ / pers.</strong></div>
                     </div>
                     <div class="menu-choix-check">✓</div>
-                </div>
-            `).join('');
+                </div>`;
+            }).join('');
             container.querySelectorAll('.menu-choix-card').forEach(card => {
                 card.addEventListener('click', () => {
                     card.classList.toggle('selected');
@@ -747,8 +747,8 @@ async function initHomeFeatures() {
                     <div class="stars">${'★'.repeat(a.note)}${'☆'.repeat(5 - a.note)}</div>
                     <p>${a.description || ''}</p>
                     <p class="author">${sanitize(a.auteur)}</p>
-                </div>
-            `).join('');
+                </div>`;
+            }).join('');
         }
     } catch (err) {
         console.log('Avis non chargés :', err.message);
@@ -862,8 +862,8 @@ async function initEspaceUtilisateur() {
                             <textarea class="avis-textarea" placeholder="Votre commentaire..." rows="3"></textarea>
                             <button class="btn-submit-avis" data-id="${c.id}">Envoyer l'avis</button>
                         </div>` : ''}
-                </div>
-            `).join('');
+                </div>`;
+            }).join('');
 
             // Suivi toggle
             list.querySelectorAll('.btn-toggle-suivi').forEach(btn => {
@@ -1030,20 +1030,30 @@ async function initEspaceEmploye() {
                 return;
             }
 
-            list.innerHTML = commandes.map(c => `
-                <div class="commande-item" data-statut="${sanitize(c.statut)}" data-id="${c.id}" data-client="${c.utilisateur?.nom || ''} ${c.utilisateur?.prenom || ''}">
+            list.innerHTML = commandes.map(c => {
+                const ref = c.numeroCommande || c.numero_commande || '–';
+                const statut = c.statut || '–';
+                const date = c.datePrestation || c.date_prestation;
+                const total = c.prixTotal || c.prix_total || '–';
+                const adresse = c.adresseLivraison || c.adresse_livraison || '';
+                const cp = c.cpLivraison || c.cp_livraison || '';
+                const ville = c.villeLivraison || c.ville_livraison || '';
+                const menusHtml = (c.menus && c.menus.length > 1)
+                    ? c.menus.map(m => `<div class="commande-info-line"><span>Menu</span><strong>${sanitize(m.titre||'–')} × ${m.nombrePersonnes||'–'} pers.</strong></div>`).join('')
+                    : `<div class="commande-info-line"><span>Menu</span><strong>${sanitize(c.menu?.titre||'–')} × ${c.nombrePersonnes||c.nombre_personnes||'–'} pers.</strong></div>`;
+                return `<div class="commande-item" data-statut="${sanitize(statut)}" data-id="${c.id}" data-client="${c.utilisateur?.nom || ''} ${c.utilisateur?.prenom || ''}">
                     <div class="commande-item-header">
                         <div>
-                            <span class="commande-ref">${sanitize(c.numero_commande)}</span>
-                            <span class="statut-badge statut-${sanitize(c.statut||'')}">${(c.statut||'-').replace(/_/g, ' ')}</span>
+                            <span class="commande-ref">${sanitize(ref)}</span>
+                            <span class="statut-badge statut-${sanitize(statut)}">${statut.replace(/_/g, ' ')}</span>
                         </div>
-                        <span class="commande-date">${new Date(c.date_prestation).toLocaleDateString('fr-FR')} — ${new Date(c.date_prestation).toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'})}</span>
+                        <span class="commande-date">${date ? new Date(date).toLocaleDateString('fr-FR') + ' — ' + new Date(date).toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'}) : '–'}</span>
                     </div>
                     <div class="commande-item-body">
                         <div class="commande-info-line"><span>Client</span><strong>${c.utilisateur?.prenom || ''} ${c.utilisateur?.nom || ''} — ${c.utilisateur?.telephone || ''}</strong></div>
-                        <div class="commande-info-line"><span>Menu</span><strong>${c.menu?.titre || ''} × ${sanitize(c.nombre_personnes)} pers.</strong></div>
-                        <div class="commande-info-line"><span>Adresse</span><strong>${c.adresse_livraison || ''}, ${c.cp_livraison || ''} ${c.ville_livraison || ''}</strong></div>
-                        <div class="commande-info-line"><span>Total</span><strong>${sanitize(c.prix_total)}€</strong></div>
+                        ${menusHtml}
+                        <div class="commande-info-line"><span>Adresse</span><strong>${adresse}, ${cp} ${ville}</strong></div>
+                        <div class="commande-info-line"><span>Total</span><strong>${total}€</strong></div>
                     </div>
                     <div class="statut-update-form">
                         <select class="select-statut">
@@ -1058,8 +1068,8 @@ async function initEspaceEmploye() {
                         <button class="btn-update-statut btn-step-next">Mettre à jour</button>
                         <button class="btn-annuler-emp">✕ Annuler (contact requis)</button>
                     </div>
-                </div>
-            `).join('');
+                </div>`;
+            }).join('');
 
             list.querySelectorAll('.btn-update-statut').forEach(btn => {
                 btn.addEventListener('click', async () => {
@@ -1138,8 +1148,8 @@ async function initEspaceEmploye() {
                         <button class="btn-valider-avis">✅ Valider</button>
                         <button class="btn-refuser-avis">✕ Refuser</button>
                     </div>
-                </div>
-            `).join('');
+                </div>`;
+            }).join('');
 
             list.querySelectorAll('.btn-valider-avis').forEach(btn => {
                 btn.addEventListener('click', async () => {
@@ -1181,8 +1191,8 @@ async function initEspaceEmploye() {
                         <button class="btn-edit-menu btn-step-next">✏️ Modifier</button>
                         <button class="btn-delete-menu">🗑️ Désactiver</button>
                     </div>
-                </div>
-            `).join('');
+                </div>`;
+            }).join('');
 
             list.querySelectorAll('.btn-edit-menu').forEach(btn => {
                 btn.addEventListener('click', async () => {
@@ -1289,8 +1299,8 @@ async function initEspaceAdmin() {
                     <button class="btn-toggle-employe" data-actif="${e.actif}" data-id="${e.id}">
                         ${e.actif ? 'Désactiver' : 'Réactiver'}
                     </button>
-                </div>
-            `).join('');
+                </div>`;
+            }).join('');
 
             list.querySelectorAll('.btn-toggle-employe').forEach(btn => {
                 btn.addEventListener('click', async () => {
@@ -1614,8 +1624,8 @@ async function initGestionPlats(prefixe) {
                         <button class="btn-edit-plat btn-step-next">✏️ Modifier</button>
                         <button class="btn-delete-plat" style="background:#ef4444;color:#fff;border:none;padding:.4rem .8rem;border-radius:4px;cursor:pointer;">🗑️ Supprimer</button>
                     </div>
-                </div>
-            `).join('');
+                </div>`;
+            }).join('');
             list.querySelectorAll('.btn-edit-plat').forEach(btn => {
                 btn.addEventListener('click', () => {
                     const item = btn.closest('.plat-item');
