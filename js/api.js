@@ -22,6 +22,17 @@ async function apiFetch(endpoint, options = {}) {
         credentials: 'include',
     });
 
+    // JWT expiré → tenter un refresh automatique (sauf pour /refresh lui-même)
+    if (response.status === 401 && !options._retried && endpoint !== '/api/auth/refresh') {
+        const refreshed = await Auth.tryRefresh();
+        if (refreshed) {
+            return apiFetch(endpoint, { ...options, _retried: true });
+        }
+        localStorage.removeItem('user');
+        window.location.hash = 'connexion';
+        throw new Error('Session expirée, veuillez vous reconnecter.');
+    }
+
     if (response.status === 401) {
         localStorage.removeItem('user');
         window.location.hash = 'connexion';
@@ -82,6 +93,24 @@ const Auth = {
             method: 'POST',
             body: JSON.stringify({ token, password }),
         });
+    },
+
+    async tryRefresh() {
+        try {
+            const resp = await fetch(`${API_URL}/api/auth/refresh`, {
+                method: 'POST',
+                credentials: 'include',
+            });
+            if (!resp.ok) return false;
+            const json = await resp.json();
+            if (json.user) {
+                localStorage.setItem('user', JSON.stringify(json.user));
+                return true;
+            }
+            return false;
+        } catch(e) {
+            return false;
+        }
     },
 
     async logout() {
