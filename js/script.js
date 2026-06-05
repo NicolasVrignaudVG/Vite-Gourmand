@@ -1331,8 +1331,6 @@ async function initEspaceAdmin() {
                 const menusHtml = (c.menus && c.menus.length > 1)
                     ? c.menus.map(m => `<div class="commande-info-line"><span>Menu</span><strong>${sanitize(m.titre||'–')} × ${m.nombrePersonnes||'–'} pers. — ${m.prixTotal||'–'}€</strong></div>`).join('')
                     : `<div class="commande-info-line"><span>Menu</span><strong>${sanitize(titre)} × ${sanitize(nb)} pers.</strong></div>`;
-                const statutsAdm = ['en_attente','accepte','en_preparation','en_livraison','livre','retour_materiel','terminee','annulee'];
-                const statutOptions = statutsAdm.map(s => `<option value="${s}" ${s===statut?'selected':''}>${s.replace(/_/g,' ')}</option>`).join('');
                 return `<div class="commande-item" data-statut="${sanitize(statut)}" data-id="${c.id}" data-client="${nom} ${prenom}">
                     <div class="commande-item-header">
                         <div><span class="commande-ref">${sanitize(ref)}</span>
@@ -1347,7 +1345,14 @@ async function initEspaceAdmin() {
                     </div>
                     <div class="commande-actions" style="display:flex;gap:.5rem;align-items:center;padding:.75rem 1rem;border-top:1px solid var(--color-border,#e5e7eb);flex-wrap:wrap">
                         <select class="select-statut" style="flex:1;min-width:160px;padding:.4rem .6rem;border:1px solid var(--color-border,#e5e7eb);border-radius:6px;font-size:.85rem">
-                            ${statutOptions}
+                            <option value="en_attente" ${statut==='en_attente'?'selected':''}>En attente</option>
+                            <option value="accepte" ${statut==='accepte'?'selected':''}>Acceptée</option>
+                            <option value="en_preparation" ${statut==='en_preparation'?'selected':''}>En préparation</option>
+                            <option value="en_livraison" ${statut==='en_livraison'?'selected':''}>En cours de livraison</option>
+                            <option value="livre" ${statut==='livre'?'selected':''}>Livré</option>
+                            <option value="retour_materiel" ${statut==='retour_materiel'?'selected':''}>En attente retour matériel</option>
+                            <option value="terminee" ${statut==='terminee'?'selected':''}>Terminée</option>
+                            <option value="annulee" ${statut==='annulee'?'selected':''}>Annulée</option>
                         </select>
                         <button class="btn-update-statut btn-step-next" style="padding:.4rem .8rem;font-size:.85rem">✅ Mettre à jour</button>
                     </div>
@@ -1360,7 +1365,7 @@ async function initEspaceAdmin() {
                     try {
                         await Commandes.updateStatut(item.dataset.id, select.value);
                         item.querySelector('.statut-badge').className = `statut-badge statut-${select.value}`;
-                        item.querySelector('.statut-badge').textContent = select.value.replace(/_/g,' ');
+                        item.querySelector('.statut-badge').textContent = select.options[select.selectedIndex].text;
                         item.dataset.statut = select.value;
                     } catch(e) { alert(e.message); }
                 });
