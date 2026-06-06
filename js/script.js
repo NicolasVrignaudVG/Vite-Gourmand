@@ -194,9 +194,30 @@ async function initMenuDetail() {
         const platsParType = { entree: [], plat: [], dessert: [] };
         (menu.plats || []).forEach(p => { if (platsParType[p.type]) platsParType[p.type].push(p); });
 
-        container.innerHTML = `
+        // Construire la galerie d'images (toutes les images du menu)
+        const allImages = (menu.images && menu.images.length > 0)
+            ? menu.images
+            : (menu.image_principale ? [{ url: menu.image_principale, alt: menu.titre, principale: true }] : []);
+
+        const galerieHtml = allImages.length > 1 ? `
+            <div class="detail-galerie">
+                <div class="galerie-main">
+                    <img id="galerie-main-img" src="${allImages[0].url}" alt="${sanitize(allImages[0].alt || menu.titre)}">
+                    <button class="galerie-nav galerie-prev" id="galerie-prev" aria-label="Image précédente">‹</button>
+                    <button class="galerie-nav galerie-next" id="galerie-next" aria-label="Image suivante">›</button>
+                    <span class="galerie-counter" id="galerie-counter">1 / ${allImages.length}</span>
+                </div>
+                <div class="galerie-thumbs">
+                    ${allImages.map((img, i) => `
+                        <img src="${img.url}" alt="${sanitize(img.alt || menu.titre)}"
+                             class="galerie-thumb ${i === 0 ? 'active' : ''}"
+                             data-index="${i}">
+                    `).join('')}
+                </div>
+            </div>
+        ` : `
             <div class="detail-hero">
-                <img src="${menu.image_principale || (menu.images?.[0]?.url) || ''}" alt="${sanitize(menu.titre)}">
+                <img src="${allImages[0]?.url || ''}" alt="${sanitize(menu.titre)}">
                 <div class="detail-hero-overlay">
                     <div class="menu-tags">
                         <span class="tag tag-theme">${sanitize(menu.theme || '')}</span>
@@ -206,6 +227,19 @@ async function initMenuDetail() {
                     <p class="detail-hero-desc">${sanitize(menu.description || '')}</p>
                 </div>
             </div>
+        `;
+
+        container.innerHTML = `
+            ${galerieHtml}
+            ${allImages.length > 1 ? `
+            <div class="detail-hero-info">
+                <div class="menu-tags">
+                    <span class="tag tag-theme">${sanitize(menu.theme || '')}</span>
+                    <span class="tag tag-regime">${sanitize(menu.regime || '')}</span>
+                </div>
+                <h1>${sanitize(menu.titre)}</h1>
+                <p class="detail-hero-desc">${sanitize(menu.description || '')}</p>
+            </div>` : ''}
             <div class="detail-body">
                 <div class="detail-main">
                     <section class="detail-section">
@@ -244,6 +278,26 @@ async function initMenuDetail() {
                 </aside>
             </div>
         `;
+
+        // ── Logique carousel (si plusieurs images) ────────────────
+        if (allImages.length > 1) {
+            let current = 0;
+            const mainImg = document.getElementById('galerie-main-img');
+            const counter = document.getElementById('galerie-counter');
+            const thumbs  = document.querySelectorAll('.galerie-thumb');
+
+            function goTo(index) {
+                current = (index + allImages.length) % allImages.length;
+                mainImg.src = allImages[current].url;
+                mainImg.alt = sanitize(allImages[current].alt || menu.titre);
+                counter.textContent = `${current + 1} / ${allImages.length}`;
+                thumbs.forEach((t, i) => t.classList.toggle('active', i === current));
+            }
+
+            document.getElementById('galerie-prev')?.addEventListener('click', () => goTo(current - 1));
+            document.getElementById('galerie-next')?.addEventListener('click', () => goTo(current + 1));
+            thumbs.forEach((t, i) => t.addEventListener('click', () => goTo(i)));
+        }
 
         document.getElementById('btn-commander')?.addEventListener('click', () => {
             if (!Auth.isLoggedIn()) {
@@ -1557,6 +1611,51 @@ function initFormulaireMenu(onSaved) {
         if (preview) { preview.src = menu?.image_principale || ''; preview.style.display = menu?.image_principale ? 'block' : 'none'; }
         const fileInput = document.getElementById('menu-form-image-file');
         if (fileInput) fileInput.value = '';
+
+        // Réinitialiser la galerie et afficher les images existantes
+        const galeriePreview = document.getElementById('menu-form-galerie-preview');
+        const galerieFiles   = document.getElementById('menu-form-galerie-files');
+        if (galerieFiles) galerieFiles.value = '';
+        if (galeriePreview) {
+            const autresImages = (menu?.images || []).filter(img => !img.principale);
+            galeriePreview.innerHTML = autresImages.map(img => `
+                <div style="position:relative;display:inline-block">
+                    <img src="${img.url}" alt="${sanitize(img.alt || '')}"
+                         style="width:80px;height:60px;object-fit:cover;border-radius:4px;border:1px solid var(--color-border)">
+                    <span style="position:absolute;top:-6px;right:-6px;background:#dc3545;color:#fff;border-radius:50%;width:18px;height:18px;display:flex;align-items:center;justify-content:center;font-size:11px;cursor:pointer"
+                          data-img-id="${img.id || ''}" data-img-url="${img.url}" title="Supprimer">×</span>
+                </div>
+            `).join('');
+            // Gestion suppression image galerie existante
+            galeriePreview.querySelectorAll('[data-img-url]').forEach(btn => {
+                btn.addEventListener('click', async () => {
+                    const imgId  = btn.dataset.imgId;
+                    const menuId = document.getElementById('menu-form-id')?.value;
+                    if (!menuId || !imgId) { btn.parentElement.remove(); return; }
+                    try {
+                        await apiFetch(`/api/menus/${menuId}/images/${imgId}`, { method: 'DELETE' });
+                        btn.parentElement.remove();
+                    } catch(e) { alert('Erreur suppression image : ' + e.message); }
+                });
+            });
+        }
+
+        // Preview images galerie sélectionnées
+        if (galerieFiles) {
+            galerieFiles.addEventListener('change', () => {
+                if (!galeriePreview) return;
+                const existant = galeriePreview.querySelectorAll('[data-img-url]').length;
+                const previews = Array.from(galerieFiles.files).map(file => {
+                    const url = URL.createObjectURL(file);
+                    return `<img src="${url}" style="width:80px;height:60px;object-fit:cover;border-radius:4px;border:2px dashed var(--color-primary)">`;
+                }).join('');
+                // Ajouter les nouvelles previews sans effacer les existantes
+                const tempDiv = document.createElement('div');
+                tempDiv.innerHTML = previews;
+                Array.from(tempDiv.children).forEach(el => galeriePreview.appendChild(el));
+            });
+        }
+
         document.getElementById('menu-form-title-label').textContent = menu?.id ? 'Modifier le menu' : 'Nouveau menu';
         modal.style.display = 'flex';
     }
@@ -1612,6 +1711,20 @@ function initFormulaireMenu(onSaved) {
             const platIds = Array.from(document.querySelectorAll('input[name="menu-plat"]:checked')).map(el => parseInt(el.value));
             if (menuId && platIds.length >= 0) {
                 await apiFetch(`/api/menus/${menuId}/plats`, { method: 'POST', body: JSON.stringify({ plat_ids: platIds }) });
+            }
+
+            // Upload des images supplémentaires de la galerie
+            const gallerieFiles = document.getElementById('menu-form-galerie-files');
+            if (gallerieFiles?.files?.length && menuId) {
+                for (const file of Array.from(gallerieFiles.files)) {
+                    try {
+                        const up = await Upload.image(file);
+                        await apiFetch(`/api/menus/${menuId}/images`, {
+                            method: 'POST',
+                            body: JSON.stringify({ url: `${API_URL}/${up.url}`, alt: titre, principale: false })
+                        });
+                    } catch(e) { console.warn('Image galerie non uploadée :', e.message); }
+                }
             }
 
             setTimeout(() => { modal.style.display = 'none'; if (onSaved) onSaved(); }, 1000);

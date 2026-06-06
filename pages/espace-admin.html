@@ -217,15 +217,27 @@
         </div>
 
         <div class="input-group">
-            <label>Image du menu</label>
+            <label>Image principale du menu</label>
             <div class="upload-zone">
                 <input type="file" id="menu-form-image-file" accept="image/jpeg,image/png,image/webp" style="display:none">
                 <input type="hidden" id="menu-form-image">
                 <button type="button" class="btn-step-next" onclick="document.getElementById('menu-form-image-file').click()">
-                    📁 Choisir une image
+                    📁 Choisir une image principale
                 </button>
                 <small style="color:var(--color-text-muted);margin-left:.5rem">JPG, PNG, WebP — max 5 Mo</small>
                 <img id="menu-form-preview" src="" alt="Aperçu" style="display:none;width:120px;height:90px;object-fit:cover;border-radius:6px;margin-top:.5rem">
+            </div>
+        </div>
+
+        <div class="input-group">
+            <label>Galerie d'images supplémentaires</label>
+            <div class="upload-zone">
+                <input type="file" id="menu-form-galerie-files" accept="image/jpeg,image/png,image/webp" multiple style="display:none">
+                <button type="button" class="btn-step-next" onclick="document.getElementById('menu-form-galerie-files').click()">
+                    🖼️ Ajouter des photos à la galerie
+                </button>
+                <small style="color:var(--color-text-muted);margin-left:.5rem">Plusieurs fichiers possibles — max 5 Mo chacun</small>
+                <div id="menu-form-galerie-preview" style="display:flex;gap:8px;flex-wrap:wrap;margin-top:.5rem"></div>
             </div>
         </div>
 
