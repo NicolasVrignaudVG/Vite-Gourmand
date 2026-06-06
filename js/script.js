@@ -88,19 +88,19 @@ function renderMenuCards(menus, grid, countLabel, noResults) {
         <div class="menu-card"
              data-id="${menu.id}"
              data-prix="${menu.prix_par_personne}"
-             data-theme="${(menu.theme || '').toLowerCase()}"
-             data-regime="${(menu.regime || '').toLowerCase()}"
+             data-theme="${sanitize((menu.theme || '').toLowerCase())}"
+             data-regime="${sanitize((menu.regime || '').toLowerCase())}"
              data-personnes="${menu.nombre_personne_minimum}">
             <div class="menu-image">
                 <img src="${menu.image_principale || 'images/default.jpg'}" alt="${sanitize(menu.titre)}">
             </div>
             <div class="menu-content">
                 <div class="menu-tags">
-                    <span class="tag tag-theme">${menu.theme || ''}</span>
-                    <span class="tag tag-regime">${menu.regime || ''}</span>
+                    <span class="tag tag-theme">${sanitize(menu.theme || '')}</span>
+                    <span class="tag tag-regime">${sanitize(menu.regime || '')}</span>
                 </div>
                 <h2 class="menu-title">${sanitize(menu.titre)}</h2>
-                <p class="menu-description">${menu.description || ''}</p>
+                <p class="menu-description">${sanitize(menu.description || '')}</p>
                 <div class="menu-infos">
                     <div class="menu-min">Min ${menu.nombre_personne_minimum} personne${menu.nombre_personne_minimum > 1 ? 's' : ''}</div>
                     <div class="menu-price">${menu.prix_par_personne}€</div>
@@ -199,11 +199,11 @@ async function initMenuDetail() {
                 <img src="${menu.image_principale || (menu.images?.[0]?.url) || ''}" alt="${sanitize(menu.titre)}">
                 <div class="detail-hero-overlay">
                     <div class="menu-tags">
-                        <span class="tag tag-theme">${menu.theme || ''}</span>
-                        <span class="tag tag-regime">${menu.regime || ''}</span>
+                        <span class="tag tag-theme">${sanitize(menu.theme || '')}</span>
+                        <span class="tag tag-regime">${sanitize(menu.regime || '')}</span>
                     </div>
                     <h1>${sanitize(menu.titre)}</h1>
-                    <p class="detail-hero-desc">${menu.description || ''}</p>
+                    <p class="detail-hero-desc">${sanitize(menu.description || '')}</p>
                 </div>
             </div>
             <div class="detail-body">
@@ -214,7 +214,7 @@ async function initMenuDetail() {
                             ${['entree','plat','dessert'].map(type => `
                                 <div class="detail-plat">
                                     <span class="plat-label">${type === 'entree' ? 'Entrée' : type === 'plat' ? 'Plat' : 'Dessert'}</span>
-                                    <p>${platsParType[type].map(p => p.nom).join(' ou ')}</p>
+                                    <p>${platsParType[type].map(p => sanitize(p.nom)).join(' ou ')}</p>
                                 </div>
                             `).join('')}
                         </div>
@@ -222,12 +222,12 @@ async function initMenuDetail() {
                     <section class="detail-section">
                         <h2 class="detail-section-title">⚠️ Allergènes</h2>
                         <div class="detail-allergenes">
-                            ${[...new Set((menu.plats || []).flatMap(p => p.allergenes || []))].map(a => `<span class="tag-allergene">${a}</span>`).join('')}
+                            ${[...new Set((menu.plats || []).flatMap(p => p.allergenes || []))].map(a => `<span class="tag-allergene">${sanitize(a)}</span>`).join('')}
                         </div>
                     </section>
                     <section class="detail-section detail-conditions">
                         <h2 class="detail-section-title">📋 Conditions importantes</h2>
-                        <p>${menu.conditions || ''}</p>
+                        <p>${sanitize(menu.conditions || '')}</p>
                     </section>
                 </div>
                 <aside class="detail-aside">
@@ -286,7 +286,7 @@ function initConnexionFeatures() {
 
         try {
             const user = await Auth.login(email, password);
-            showMsg(msg, `Bienvenue ${user.prenom} ! Redirection…`, 'success');
+            showMsg(msg, `Bienvenue ${sanitize(user.prenom)} ! Redirection…`, 'success');
             setTimeout(() => redirectAfterLogin(user), 1000);
         } catch (err) {
             showMsg(msg, err.message || 'Email ou mot de passe incorrect.', 'error');
@@ -316,11 +316,19 @@ function initInscriptionFeatures() {
         const nom             = document.getElementById('NomInput')?.value.trim();
         const prenom          = document.getElementById('PrenomInput')?.value.trim();
         const email           = document.getElementById('email')?.value.trim();
+        const telephone       = document.getElementById('telephone')?.value.trim();
+        const adresse         = document.getElementById('adresse')?.value.trim();
         const password        = document.getElementById('password')?.value;
         const confirmPassword = document.getElementById('confirmPassword')?.value;
 
-        if (!nom || !prenom || !email || !password || !confirmPassword) {
+        if (!nom || !prenom || !email || !telephone || !adresse || !password || !confirmPassword) {
             showMsg(msg, 'Veuillez remplir tous les champs.', 'error'); return;
+        }
+        if (!/^[\w.+-]+@[\w-]+\.[a-zA-Z]{2,}$/.test(email)) {
+            showMsg(msg, 'Adresse e-mail invalide.', 'error'); return;
+        }
+        if (!/^(\+33|0)[0-9]{9}$/.test(telephone.replace(/\s/g, ''))) {
+            showMsg(msg, 'Numéro de téléphone invalide (ex : 0612345678).', 'error'); return;
         }
         if (password !== confirmPassword) {
             showMsg(msg, 'Les mots de passe ne correspondent pas.', 'error'); return;
@@ -332,7 +340,7 @@ function initInscriptionFeatures() {
         showMsg(msg, 'Inscription en cours…', 'success');
 
         try {
-            await Auth.register(nom, prenom, email, null, null, password);
+            await Auth.register(nom, prenom, email, telephone.replace(/\s/g, ''), adresse, password);
             showMsg(msg, 'Compte créé ! Un e-mail de bienvenue vous a été envoyé. Redirection…', 'success');
             setTimeout(() => { window.location.hash = 'connexion'; }, 2000);
         } catch (err) {
@@ -450,9 +458,9 @@ async function initCommande() {
                 <div class="menu-choix-card ${state.menusSelectionnes.find(m => m.menuId == menu.id) ? 'selected' : ''}" data-menu-id="${menu.id}" data-min="${menu.nombre_personne_minimum}">
                     <img src="${menu.image_principale || ''}" alt="${sanitize(menu.titre)}">
                     <div class="menu-choix-info">
-                        <div class="menu-tags"><span class="tag tag-theme">${menu.theme || ''}</span></div>
+                        <div class="menu-tags"><span class="tag tag-theme">${sanitize(menu.theme || '')}</span></div>
                         <h3>${sanitize(menu.titre)}</h3>
-                        <p>${menu.description?.substring(0, 80) || ''}…</p>
+                        <p>${sanitize(menu.description?.substring(0, 80) || '')}…</p>
                         <div class="menu-choix-meta"><span>Min ${menu.nombre_personne_minimum} pers.</span><strong>${menu.prix_par_personne}€ / pers.</strong></div>
                     </div>
                     <div class="menu-choix-check">✓</div>
@@ -672,7 +680,7 @@ async function initCommande() {
             }
 
             const recapCond = document.getElementById('recap-conditions');
-            if (recapCond) recapCond.innerHTML = `<h3 class="detail-section-title">📋 Conditions</h3><p>${menu.conditions || ''}</p>`;
+            if (recapCond) recapCond.innerHTML = `<h3 class="detail-section-title">📋 Conditions</h3><p>${sanitize(menu.conditions || '')}</p>`;
         }
 
         await updatePrix();
@@ -739,7 +747,7 @@ async function initHomeFeatures() {
             container.innerHTML = avis.slice(0, 3).map(a => `
                 <div class="avis-card">
                     <div class="stars">${'★'.repeat(a.note)}${'☆'.repeat(5 - a.note)}</div>
-                    <p>${a.description || ''}</p>
+                    <p>${sanitize(a.description || '')}</p>
                     <p class="author">${sanitize(a.auteur)}</p>
                 </div>
             `).join('');
@@ -979,10 +987,17 @@ async function initEspaceUtilisateur() {
         const adresse = document.getElementById('profil-adresse')?.value.trim();
         const mdp     = document.getElementById('profil-mdp')?.value;
 
+        if (tel && !/^(\+33|0)[0-9]{9}$/.test(tel.replace(/\s/g, ''))) {
+            showMsg(msg, 'Numéro de téléphone invalide (ex : 0612345678).', 'error'); return;
+        }
+        if (mdp && !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{10,}$/.test(mdp)) {
+            showMsg(msg, 'Le mot de passe doit contenir 10 caractères min, une majuscule, une minuscule, un chiffre et un caractère spécial.', 'error'); return;
+        }
+
         const data = {};
         if (nom)     data.nom       = nom;
         if (prenom)  data.prenom    = prenom;
-        if (tel)     data.telephone = tel;
+        if (tel)     data.telephone = tel.replace(/\s/g, '');
         if (adresse) data.adresse   = adresse;
         if (mdp)     data.password  = mdp;
 
@@ -1127,7 +1142,7 @@ async function initEspaceEmploye() {
                         <span class="stars-display">${'★'.repeat(a.note)}${'☆'.repeat(5 - a.note)}</span>
                         <span class="avis-date">${a.date}</span>
                     </div>
-                    <p class="avis-text">${a.description || ''}</p>
+                    <p class="avis-text">${sanitize(a.description || '')}</p>
                     <div class="avis-actions">
                         <button class="btn-valider-avis">✅ Valider</button>
                         <button class="btn-refuser-avis">✕ Refuser</button>
@@ -1167,8 +1182,8 @@ async function initEspaceEmploye() {
                         <h3>${sanitize(m.titre)}</h3>
                         <p>${m.prix_par_personne}€ / pers. — Min ${m.nombre_personne_minimum} pers. — Stock : ${m.quantite_restante}</p>
                         <div class="menu-tags">
-                            <span class="tag tag-theme">${m.theme || ''}</span>
-                            <span class="tag tag-regime">${m.regime || ''}</span>
+                            <span class="tag tag-theme">${sanitize(m.theme || '')}</span>
+                            <span class="tag tag-regime">${sanitize(m.regime || '')}</span>
                         </div>
                     </div>
                     <div class="menu-gestion-actions">
