@@ -44,6 +44,39 @@
             </div>
 
             <div class="input-group">
+                <label for="telephone">Téléphone</label>
+                <div class="input-wrapper">
+                    <input type="tel" id="telephone" name="telephone"
+                           placeholder="06 12 34 56 78" required
+                           autocomplete="tel">
+                    <span class="input-icon" aria-hidden="true">📱</span>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="adresse">Adresse postale</label>
+                <div class="input-wrapper">
+                    <input type="text" id="adresse" name="adresse"
+                           placeholder="12 rue de la Paix, 33000 Bordeaux" required
+                           autocomplete="street-address">
+                    <span class="input-icon" aria-hidden="true">📍</span>
+                </div>
+            </div>
+
+            <div class="input-group">
+                <label for="pseudonyme">
+                    Pseudonyme public
+                    <span class="field-optional">(optionnel — affiché sur vos avis)</span>
+                </label>
+                <div class="input-wrapper">
+                    <input type="text" id="pseudonyme" name="pseudonyme"
+                           placeholder="Ex : Jean B., Gourmand33…"
+                           maxlength="50" autocomplete="nickname">
+                    <span class="input-icon" aria-hidden="true">✍️</span>
+                </div>
+            </div>
+
+            <div class="input-group">
                 <label for="password">Mot de passe</label>
                 <div class="input-wrapper">
                     <input type="password" id="password" name="password"

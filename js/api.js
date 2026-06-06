@@ -65,10 +65,10 @@ const Auth = {
         return user;
     },
 
-    async register(nom, prenom, email, telephone, adresse, password) {
+    async register(nom, prenom, email, telephone, adresse, password, pseudonyme = null) {
         return apiFetch('/api/auth/register', {
             method: 'POST',
-            body: JSON.stringify({ nom, prenom, email, telephone, adresse, password }),
+            body: JSON.stringify({ nom, prenom, email, telephone, adresse, password, pseudonyme }),
         });
     },
 

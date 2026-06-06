@@ -318,6 +318,7 @@ function initInscriptionFeatures() {
         const email           = document.getElementById('email')?.value.trim();
         const telephone       = document.getElementById('telephone')?.value.trim();
         const adresse         = document.getElementById('adresse')?.value.trim();
+        const pseudonyme      = document.getElementById('pseudonyme')?.value.trim() || null;
         const password        = document.getElementById('password')?.value;
         const confirmPassword = document.getElementById('confirmPassword')?.value;
 
@@ -340,7 +341,7 @@ function initInscriptionFeatures() {
         showMsg(msg, 'Inscription en cours…', 'success');
 
         try {
-            await Auth.register(nom, prenom, email, telephone.replace(/\s/g, ''), adresse, password);
+            await Auth.register(nom, prenom, email, telephone.replace(/\s/g, ''), adresse, password, pseudonyme);
             showMsg(msg, 'Compte créé ! Un e-mail de bienvenue vous a été envoyé. Redirection…', 'success');
             setTimeout(() => { window.location.hash = 'connexion'; }, 2000);
         } catch (err) {
