@@ -1888,3 +1888,48 @@ textarea:focus-visible {
     flex-wrap: wrap;
     gap: .35rem;
 }
+
+/* ── Page 404 ────────────────────────────────────────────── */
+.page-404 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 60vh;
+    padding: 4rem 2rem;
+    text-align: center;
+}
+
+.page-404-code {
+    font-size: 8rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--color-primary, #c07a3a);
+    font-family: var(--font-primary, 'Montserrat', sans-serif);
+}
+
+.page-404-title {
+    font-size: 1.8rem;
+    font-weight: 600;
+    margin: .5rem 0 1rem;
+    color: var(--color-text-dark, #1e120a);
+}
+
+.page-404-desc {
+    font-size: 1rem;
+    color: var(--color-text-muted, #6b7280);
+    font-family: var(--font-secondary, serif);
+    max-width: 400px;
+    margin-bottom: 2rem;
+}
+
+.page-404 .btn-step-next {
+    display: inline-block;
+    text-decoration: none;
+    padding: .75rem 2rem;
+}
+
+@media (max-width: 480px) {
+    .page-404-code  { font-size: 5rem; }
+    .page-404-title { font-size: 1.4rem; }
+}

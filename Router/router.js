@@ -107,13 +107,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // ── Démarrage ────────────────────────────────────────────
     const initialHash = window.location.hash.substring(1);
-    const initialPage = resolveRoute(initialHash) ?? 'home';
+    const initialPage = initialHash === ''
+        ? 'home'
+        : (resolveRoute(initialHash) ?? '404');
     loadPage(initialPage);
 
     // ── Boutons Précédent / Suivant ──────────────────────────
     window.addEventListener('popstate', () => {
         const hash = window.location.hash.substring(1);
-        const page = resolveRoute(hash) ?? hash.split('?')[0];
+        const page = hash === '' ? 'home' : (resolveRoute(hash) ?? '404');
         loadPage(page);
     });
 });

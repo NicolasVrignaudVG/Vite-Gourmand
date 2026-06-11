@@ -15,6 +15,7 @@ export const allRoutes = [
     new Route("/espace-utilisateur",    "Mon espace",               "/pages/espace-utilisateur.html"),
     new Route("/espace-employe",        "Espace Employé",           "/pages/espace-employe.html"),
     new Route("/espace-admin",          "Administration",           "/pages/espace-admin.html"),
+    new Route("/404",                   "Page introuvable",         "/pages/404.html"),
 ];
 
 export const websiteName = "Vite&Gourmand";
