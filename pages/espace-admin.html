@@ -47,7 +47,15 @@
 
             <!-- PANEL : AVIS -->
             <div class="espace-panel hidden" id="panel-avis-adm">
-                <div class="panel-title-bar"><h2>Gestion des avis</h2></div>
+                <div class="panel-title-bar">
+                    <h2>Gestion des avis</h2>
+                    <select id="adm-avis-filter" style="padding:6px 10px;border-radius:6px;border:1px solid var(--color-border,#e5e7eb);font-size:.9rem">
+                        <option value="">Tous les avis</option>
+                        <option value="en_attente">🕐 En attente</option>
+                        <option value="valide">✅ Validés</option>
+                        <option value="refuse">✕ Refusés</option>
+                    </select>
+                </div>
                 <div class="avis-list" id="adm-avis-list">
                     <p style="text-align:center;padding:2rem;color:var(--color-text-muted)">Chargement…</p>
                 </div>

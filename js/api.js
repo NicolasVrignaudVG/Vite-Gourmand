@@ -229,6 +229,18 @@ const Avis = {
     async refuser(id) {
         return apiFetch(`/api/avis/${id}/refuser`, { method: 'PATCH' });
     },
+
+    async getAll() {
+        return apiFetch('/api/avis/all');
+    },
+
+    async delete(id) {
+        return apiFetch(`/api/avis/${id}`, { method: 'DELETE' });
+    },
+
+    async update(id, data) {
+        return apiFetch(`/api/avis/${id}`, { method: 'PATCH', body: JSON.stringify(data) });
+    },
 };
 
 // ─────────────────────────────────────────
