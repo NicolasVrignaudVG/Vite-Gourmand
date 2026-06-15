@@ -1751,6 +1751,14 @@ function initFormulaireMenu(onSaved) {
     btnNew?.addEventListener('click',    () => ouvrirModal(null));
     btnNewAdm?.addEventListener('click', () => ouvrirModal(null));
 
+    // Boutons upload — remplace les onclick inline supprimés du HTML
+    document.getElementById('btn-choisir-image-principale')?.addEventListener('click', () => {
+        document.getElementById('menu-form-image-file')?.click();
+    });
+    document.getElementById('btn-choisir-galerie')?.addEventListener('click', () => {
+        document.getElementById('menu-form-galerie-files')?.click();
+    });
+
     document.getElementById('menu-form-image-file')?.addEventListener('change', function() {
         const file = this.files[0];
         const preview = document.getElementById('menu-form-preview');
