@@ -1307,7 +1307,16 @@ async function initEspaceAdmin() {
             // ── Graphique commandes par menu (barres verticales) ──
             const barChartEl = document.getElementById('chart-commandes');
             if (barChartEl) {
-                barChartEl.innerHTML = '<canvas id="canvas-commandes" style="max-height:300px"></canvas>';
+                barChartEl.innerHTML = `
+                    <canvas
+                        id="canvas-commandes"
+                        width="600"
+                        height="300"
+                        role="img"
+                        aria-label="Graphique en barres : nombre de commandes par menu"
+                        style="max-height:300px">
+                        <img src="" alt="Graphique commandes par menu : ${labels.map((l,i) => l+' '+nbData[i]+' commande(s)').join(', ')}">
+                    </canvas>`;
                 if (window._chartCommandes) window._chartCommandes.destroy();
                 window._chartCommandes = new Chart(
                     document.getElementById('canvas-commandes'),
@@ -1340,7 +1349,16 @@ async function initEspaceAdmin() {
             // ── Graphique CA par menu (barres horizontales) ──
             const caBarsEl = document.getElementById('ca-bars');
             if (caBarsEl) {
-                caBarsEl.innerHTML = '<canvas id="canvas-ca" style="max-height:300px"></canvas>';
+                caBarsEl.innerHTML = `
+                    <canvas
+                        id="canvas-ca"
+                        width="600"
+                        height="300"
+                        role="img"
+                        aria-label="Graphique en barres : chiffre d'affaires par menu"
+                        style="max-height:300px">
+                        <img src="" alt="Chiffre d'affaires par menu : ${labels.map((l,i) => l+' '+caData[i].toFixed(2)+'€').join(', ')}">
+                    </canvas>`;
                 if (window._chartCA) window._chartCA.destroy();
                 window._chartCA = new Chart(
                     document.getElementById('canvas-ca'),
