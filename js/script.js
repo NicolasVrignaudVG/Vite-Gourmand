@@ -1299,34 +1299,78 @@ async function initEspaceAdmin() {
             document.getElementById('kpi-ca').textContent    = (stats.chiffre_affaires ?? 0).toFixed(2) + '€';
             document.getElementById('kpi-top').textContent   = parMenu[0]?.menu_titre ?? '–';
 
-            const maxNb    = Math.max(...parMenu.map(m => m.nb_commandes), 1);
-            const barChart = document.getElementById('chart-commandes');
-            if (barChart) {
-                barChart.innerHTML = `<div class="bar-chart">
-                    ${parMenu.map(m => `
-                        <div class="bar-group">
-                            <div class="bar" style="height:${Math.round((m.nb_commandes / maxNb) * 100)}%" data-val="${m.nb_commandes}"></div>
-                            <span class="bar-label">${m.menu_titre}</span>
-                        </div>
-                    `).join('')}
-                </div>`;
+            const labels  = parMenu.map(m => m.menu_titre);
+            const nbData  = parMenu.map(m => m.nb_commandes);
+            const caData  = parMenu.map(m => parseFloat(m.chiffre_affaires));
+            const colors  = ['#c07a3a','#e09050','#a06030','#d4956a','#8b5225','#f0b080'];
+
+            // ── Graphique commandes par menu (barres verticales) ──
+            const barChartEl = document.getElementById('chart-commandes');
+            if (barChartEl) {
+                barChartEl.innerHTML = '<canvas id="canvas-commandes" style="max-height:300px"></canvas>';
+                if (window._chartCommandes) window._chartCommandes.destroy();
+                window._chartCommandes = new Chart(
+                    document.getElementById('canvas-commandes'),
+                    {
+                        type: 'bar',
+                        data: {
+                            labels,
+                            datasets: [{
+                                label: 'Commandes',
+                                data: nbData,
+                                backgroundColor: colors,
+                                borderRadius: 6,
+                                borderSkipped: false,
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            plugins: {
+                                legend: { display: false },
+                                tooltip: { callbacks: { label: ctx => `${ctx.parsed.y} commande(s)` } }
+                            },
+                            scales: {
+                                y: { beginAtZero: true, ticks: { stepSize: 1 } }
+                            }
+                        }
+                    }
+                );
             }
 
-            const maxCa  = Math.max(...parMenu.map(m => m.chiffre_affaires), 1);
-            const caBars = document.getElementById('ca-bars');
-            if (caBars) {
-                caBars.innerHTML = parMenu.map(m => `
-                    <div class="ca-bar-item">
-                        <span>${m.menu_titre}</span>
-                        <div class="ca-bar-track">
-                            <div class="ca-bar-fill" style="width:${Math.round((m.chiffre_affaires / maxCa) * 100)}%">
-                                ${m.chiffre_affaires.toFixed(2)}€
-                            </div>
-                        </div>
-                        <strong>${m.chiffre_affaires.toFixed(2)}€</strong>
-                    </div>
-                `).join('');
+            // ── Graphique CA par menu (barres horizontales) ──
+            const caBarsEl = document.getElementById('ca-bars');
+            if (caBarsEl) {
+                caBarsEl.innerHTML = '<canvas id="canvas-ca" style="max-height:300px"></canvas>';
+                if (window._chartCA) window._chartCA.destroy();
+                window._chartCA = new Chart(
+                    document.getElementById('canvas-ca'),
+                    {
+                        type: 'bar',
+                        data: {
+                            labels,
+                            datasets: [{
+                                label: 'Chiffre d\'affaires (€)',
+                                data: caData,
+                                backgroundColor: colors,
+                                borderRadius: 6,
+                                borderSkipped: false,
+                            }]
+                        },
+                        options: {
+                            indexAxis: 'y',
+                            responsive: true,
+                            plugins: {
+                                legend: { display: false },
+                                tooltip: { callbacks: { label: ctx => `${ctx.parsed.x.toFixed(2)}€` } }
+                            },
+                            scales: {
+                                x: { beginAtZero: true }
+                            }
+                        }
+                    }
+                );
             }
+
         } catch (err) {
             console.error('Erreur stats:', err.message);
         }
