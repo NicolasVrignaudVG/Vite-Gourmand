@@ -39,6 +39,29 @@ function sanitize(str) {
     return div.innerHTML;
 }
 
+// Convertit une date ISO 8601 (YYYY-MM-DD ou YYYY-MM-DDTHH:mm:ssZ)
+// en format français lisible (JJ/MM/AAAA)
+function formatDate(dateISO) {
+    if (!dateISO) return '–';
+    return new Date(dateISO).toLocaleDateString('fr-FR', {
+        day:   '2-digit',
+        month: '2-digit',
+        year:  'numeric'
+    });
+}
+
+// Convertit une date ISO 8601 en format français avec heure
+function formatDateTime(dateISO) {
+    if (!dateISO) return '–';
+    return new Date(dateISO).toLocaleString('fr-FR', {
+        day:    '2-digit',
+        month:  '2-digit',
+        year:   'numeric',
+        hour:   '2-digit',
+        minute: '2-digit'
+    });
+}
+
 // ─────────────────────────────────────────
 // HORAIRES — constantes globales
 // ─────────────────────────────────────────
@@ -882,7 +905,7 @@ async function initEspaceUtilisateur() {
                             <span class="commande-ref">${sanitize(c.numeroCommande || c.numero_commande || '–')}</span>
                             <span class="statut-badge statut-${sanitize(c.statut||'')}">${(c.statut||'–').replace(/_/g, ' ')}</span>
                         </div>
-                        <span class="commande-date">${c.datePrestation||c.date_prestation ? new Date(c.datePrestation||c.date_prestation).toLocaleDateString('fr-FR') : '–'}</span>
+                        <span class="commande-date">${c.datePrestation||c.date_prestation ? formatDate(c.datePrestation||c.date_prestation) : '–'}</span>
                     </div>
                     <div class="commande-item-body">
                         <div class="commande-info-line"><span>Menu</span><strong>${c.menu?.titre || '–'}</strong></div>
@@ -902,7 +925,7 @@ async function initEspaceUtilisateur() {
                                     <div class="suivi-dot"></div>
                                     <div class="suivi-info">
                                         <strong>${s.statut}</strong>
-                                        <span>${new Date(s.created_at).toLocaleString('fr-FR')}</span>
+                                        <span>${formatDateTime(s.created_at)}</span>
                                     </div>
                                 </div>`).join('')}
                         </div>` : ''}
@@ -1101,7 +1124,7 @@ async function initEspaceEmploye() {
                             <span class="commande-ref">${sanitize(c.numero_commande)}</span>
                             <span class="statut-badge statut-${sanitize(c.statut||'')}">${(c.statut||'-').replace(/_/g, ' ')}</span>
                         </div>
-                        <span class="commande-date">${new Date(c.date_prestation).toLocaleDateString('fr-FR')} — ${new Date(c.date_prestation).toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'})}</span>
+                        <span class="commande-date">${formatDate(new Date(c.date_prestation).toISOString())} — ${new Date(c.date_prestation).toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'})}</span>
                     </div>
                     <div class="commande-item-body">
                         <div class="commande-info-line"><span>Client</span><strong>${c.utilisateur?.prenom || ''} ${c.utilisateur?.nom || ''} — ${c.utilisateur?.telephone || ''}</strong></div>
@@ -1195,7 +1218,7 @@ async function initEspaceEmploye() {
                     <div class="avis-item-header">
                         <strong>${sanitize(a.auteur)}</strong>
                         <span class="stars-display">${'★'.repeat(a.note)}${'☆'.repeat(5 - a.note)}</span>
-                        <span class="avis-date">${a.date}</span>
+                        <span class="avis-date">${formatDate(a.date)}</span>
                     </div>
                     <p class="avis-text">${sanitize(a.description || '')}</p>
                     <div class="avis-actions">
@@ -1315,7 +1338,13 @@ async function initEspaceAdmin() {
                         role="img"
                         aria-label="Graphique en barres : nombre de commandes par menu"
                         style="max-height:300px">
-                        <img src="" alt="Graphique commandes par menu : ${labels.map((l,i) => l+' '+nbData[i]+' commande(s)').join(', ')}">
+                        <table>
+                            <caption>Commandes par menu</caption>
+                            <thead><tr><th scope="col">Menu</th><th scope="col">Nombre de commandes</th></tr></thead>
+                            <tbody>
+                                ${labels.map((l, i) => `<tr><td>${l}</td><td>${nbData[i]}</td></tr>`).join('')}
+                            </tbody>
+                        </table>
                     </canvas>`;
                 if (window._chartCommandes) window._chartCommandes.destroy();
                 window._chartCommandes = new Chart(
@@ -1357,7 +1386,13 @@ async function initEspaceAdmin() {
                         role="img"
                         aria-label="Graphique en barres : chiffre d'affaires par menu"
                         style="max-height:300px">
-                        <img src="" alt="Chiffre d'affaires par menu : ${labels.map((l,i) => l+' '+caData[i].toFixed(2)+'€').join(', ')}">
+                        <table>
+                            <caption>Chiffre d'affaires par menu</caption>
+                            <thead><tr><th scope="col">Menu</th><th scope="col">Chiffre d'affaires</th></tr></thead>
+                            <tbody>
+                                ${labels.map((l, i) => `<tr><td>${l}</td><td>${caData[i].toFixed(2)}€</td></tr>`).join('')}
+                            </tbody>
+                        </table>
                     </canvas>`;
                 if (window._chartCA) window._chartCA.destroy();
                 window._chartCA = new Chart(
@@ -1541,7 +1576,7 @@ async function initEspaceAdmin() {
                             <span style="font-size:.8rem;padding:2px 8px;border-radius:12px;background:${statutColor[a.statut]}22;color:${statutColor[a.statut]};font-weight:500">
                                 ${statutLabel[a.statut] || a.statut}
                             </span>
-                            <small style="color:var(--color-text-muted)">${a.date}</small>
+                            <small style="color:var(--color-text-muted)">${formatDate(a.date)}</small>
                         </div>
                         <p class="avis-description">${sanitize(a.description || '')}</p>
                         <div class="avis-actions">
