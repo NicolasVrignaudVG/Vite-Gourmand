@@ -18,6 +18,7 @@
             <button class="espace-nav-btn" data-panel="horaires-adm">🕐 Horaires</button>
             <button class="espace-nav-btn" data-panel="employes-adm">👥 Employés</button>
             <button class="espace-nav-btn" data-panel="stats-adm">📊 Statistiques</button>
+            <button class="espace-nav-btn" data-panel="profil-adm">👤 Mon profil</button>
         </nav>
 
         <div class="espace-content">
@@ -205,6 +206,55 @@
                     <div id="ca-bars">
                         <p style="text-align:center;padding:1rem;color:var(--color-text-muted)">Chargement…</p>
                     </div>
+                </div>
+            </div>
+
+            <!-- PANEL : MON PROFIL -->
+            <div class="espace-panel hidden" id="panel-profil-adm">
+                <div class="panel-title-bar"><h2>Mon profil</h2></div>
+                <div class="commande-form">
+                    <div class="form-row">
+                        <div class="input-group">
+                            <label for="profil-nom">Nom</label>
+                            <div class="input-wrapper"><input type="text" id="profil-nom" autocomplete="family-name"></div>
+                        </div>
+                        <div class="input-group">
+                            <label for="profil-prenom">Prénom</label>
+                            <div class="input-wrapper"><input type="text" id="profil-prenom" autocomplete="given-name"></div>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="input-group">
+                            <label for="profil-email">E-mail</label>
+                            <div class="input-wrapper">
+                                <input type="email" id="profil-email" autocomplete="email" disabled>
+                                <span class="input-icon" aria-hidden="true">📧</span>
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label for="profil-gsm">GSM</label>
+                            <div class="input-wrapper">
+                                <input type="tel" id="profil-gsm" autocomplete="tel">
+                                <span class="input-icon" aria-hidden="true">📱</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="profil-adresse">Adresse postale</label>
+                        <div class="input-wrapper">
+                            <input type="text" id="profil-adresse" autocomplete="street-address">
+                            <span class="input-icon" aria-hidden="true">📍</span>
+                        </div>
+                    </div>
+                    <div class="input-group">
+                        <label for="profil-mdp">Nouveau mot de passe</label>
+                        <div class="input-wrapper">
+                            <input type="password" id="profil-mdp" placeholder="Laisser vide pour ne pas changer" autocomplete="new-password">
+                            <button type="button" class="input-icon toggle password-toggle" aria-label="Afficher / masquer le mot de passe">👁️</button>
+                        </div>
+                    </div>
+                    <div class="form-msg" id="profil-msg" role="alert"></div>
+                    <div class="step-actions"><button class="btn-step-next" id="btn-save-profil">💾 Enregistrer</button></div>
                 </div>
             </div>
 

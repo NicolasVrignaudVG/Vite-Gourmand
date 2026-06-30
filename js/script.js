@@ -43,7 +43,9 @@ function sanitize(str) {
 // en format français lisible (JJ/MM/AAAA)
 function formatDate(dateISO) {
     if (!dateISO) return '–';
-    return new Date(dateISO).toLocaleDateString('fr-FR', {
+    const d = new Date(dateISO);
+    if (isNaN(d.getTime())) return '–';
+    return d.toLocaleDateString('fr-FR', {
         day:   '2-digit',
         month: '2-digit',
         year:  'numeric'
@@ -53,7 +55,9 @@ function formatDate(dateISO) {
 // Convertit une date ISO 8601 en format français avec heure
 function formatDateTime(dateISO) {
     if (!dateISO) return '–';
-    return new Date(dateISO).toLocaleString('fr-FR', {
+    const d = new Date(dateISO);
+    if (isNaN(d.getTime())) return '–';
+    return d.toLocaleString('fr-FR', {
         day:    '2-digit',
         month:  '2-digit',
         year:   'numeric',
@@ -879,6 +883,60 @@ function initEspaceNav() {
 // ─────────────────────────────────────────
 // ESPACE UTILISATEUR
 // ─────────────────────────────────────────
+// ─────────────────────────────────────────
+// MON PROFIL — réutilisable (utilisateur / employé / admin)
+// ─────────────────────────────────────────
+function initMonProfil() {
+    const user = Auth.getUser();
+    const set = (id, val) => { const el = document.getElementById(id); if (el && val) el.value = val; };
+    set('profil-nom',     user?.nom);
+    set('profil-prenom',  user?.prenom);
+    set('profil-email',   user?.email);
+    set('profil-gsm',     user?.telephone);
+    set('profil-adresse', user?.adresse);
+
+    document.getElementById('btn-save-profil')?.addEventListener('click', async () => {
+        const msg     = document.getElementById('profil-msg');
+        const nom     = document.getElementById('profil-nom')?.value.trim();
+        const prenom  = document.getElementById('profil-prenom')?.value.trim();
+        const tel     = document.getElementById('profil-gsm')?.value.trim();
+        const adresse = document.getElementById('profil-adresse')?.value.trim();
+        const mdp     = document.getElementById('profil-mdp')?.value;
+
+        if (tel && !/^(\+33|0)[0-9]{9}$/.test(tel.replace(/\s/g, ''))) {
+            showMsg(msg, 'Numéro de téléphone invalide (ex : 0612345678).', 'error'); return;
+        }
+        if (mdp && !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{10,}$/.test(mdp)) {
+            showMsg(msg, 'Le mot de passe doit contenir 10 caractères min, une majuscule, une minuscule, un chiffre et un caractère spécial.', 'error'); return;
+        }
+
+        const data = {};
+        if (nom)     data.nom       = nom;
+        if (prenom)  data.prenom    = prenom;
+        if (tel)     data.telephone = tel.replace(/\s/g, '');
+        if (adresse) data.adresse   = adresse;
+        if (mdp)     data.password  = mdp;
+
+        try {
+            const result = await Auth.updateMe(data);
+            const stored = Auth.getUser();
+            if (stored) {
+                stored.nom       = result.nom;
+                stored.prenom    = result.prenom;
+                stored.telephone = result.telephone;
+                stored.adresse   = result.adresse;
+                localStorage.setItem('user', JSON.stringify(stored));
+            }
+            showMsg(msg, 'Profil mis à jour avec succès !', 'success');
+            const mdpField = document.getElementById('profil-mdp');
+            if (mdpField) mdpField.value = '';
+        } catch (err) {
+            showMsg(msg, err.message, 'error');
+        }
+    });
+    initPasswordToggle('.password-toggle', 'profil-mdp');
+}
+
 async function initEspaceUtilisateur() {
     if (!Auth.isLoggedIn()) { window.location.hash = 'connexion'; return; }
     initEspaceNav();
@@ -887,12 +945,7 @@ async function initEspaceUtilisateur() {
     const nomEl = document.getElementById('user-nom');
     if (nomEl) nomEl.textContent = `${sanitize(user?.prenom)} ${sanitize(user?.nom)}`;
 
-    const set = (id, val) => { const el = document.getElementById(id); if (el && val) el.value = val; };
-    set('profil-nom',     user?.nom);
-    set('profil-prenom',  user?.prenom);
-    set('profil-email',   user?.email);
-    set('profil-gsm',     user?.telephone);
-    set('profil-adresse', user?.adresse);
+    initMonProfil();
 
     try {
         const commandes = await Commandes.getMes();
@@ -1056,45 +1109,6 @@ async function initEspaceUtilisateur() {
             }, 1000);
         } catch (err) { showMsg(msg, err.message, 'error'); }
     });
-
-    document.getElementById('btn-save-profil')?.addEventListener('click', async () => {
-        const msg     = document.getElementById('profil-msg');
-        const nom     = document.getElementById('profil-nom')?.value.trim();
-        const prenom  = document.getElementById('profil-prenom')?.value.trim();
-        const tel     = document.getElementById('profil-gsm')?.value.trim();
-        const adresse = document.getElementById('profil-adresse')?.value.trim();
-        const mdp     = document.getElementById('profil-mdp')?.value;
-
-        if (tel && !/^(\+33|0)[0-9]{9}$/.test(tel.replace(/\s/g, ''))) {
-            showMsg(msg, 'Numéro de téléphone invalide (ex : 0612345678).', 'error'); return;
-        }
-        if (mdp && !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{10,}$/.test(mdp)) {
-            showMsg(msg, 'Le mot de passe doit contenir 10 caractères min, une majuscule, une minuscule, un chiffre et un caractère spécial.', 'error'); return;
-        }
-
-        const data = {};
-        if (nom)     data.nom       = nom;
-        if (prenom)  data.prenom    = prenom;
-        if (tel)     data.telephone = tel.replace(/\s/g, '');
-        if (adresse) data.adresse   = adresse;
-        if (mdp)     data.password  = mdp;
-
-        try {
-            const result = await Auth.updateMe(data);
-            const stored = Auth.getUser();
-            if (stored) {
-                stored.nom       = result.nom;
-                stored.prenom    = result.prenom;
-                stored.telephone = result.telephone;
-                stored.adresse   = result.adresse;
-                localStorage.setItem('user', JSON.stringify(stored));
-            }
-            showMsg(msg, 'Profil mis à jour avec succès !', 'success');
-        } catch (err) {
-            showMsg(msg, err.message, 'error');
-        }
-    });
-    initPasswordToggle('.password-toggle', 'profil-mdp');
 }
 
 // ─────────────────────────────────────────
@@ -1105,6 +1119,7 @@ async function initEspaceEmploye() {
         window.location.hash = 'connexion'; return;
     }
     initEspaceNav();
+    initMonProfil();
 
     async function chargerCommandesEmploye() {
         try {
@@ -1124,7 +1139,7 @@ async function initEspaceEmploye() {
                             <span class="commande-ref">${sanitize(c.numero_commande)}</span>
                             <span class="statut-badge statut-${sanitize(c.statut||'')}">${(c.statut||'-').replace(/_/g, ' ')}</span>
                         </div>
-                        <span class="commande-date">${formatDate(new Date(c.date_prestation).toISOString())} — ${new Date(c.date_prestation).toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'})}</span>
+                        <span class="commande-date">${c.date_prestation ? `${formatDate(c.date_prestation)} — ${new Date(c.date_prestation).toLocaleTimeString('fr-FR', {hour:'2-digit',minute:'2-digit'})}` : '–'}</span>
                     </div>
                     <div class="commande-item-body">
                         <div class="commande-info-line"><span>Client</span><strong>${c.utilisateur?.prenom || ''} ${c.utilisateur?.nom || ''} — ${c.utilisateur?.telephone || ''}</strong></div>
@@ -1312,6 +1327,7 @@ async function initEspaceAdmin() {
         window.location.hash = 'connexion'; return;
     }
     initEspaceNav();
+    initMonProfil();
 
     async function chargerStats(filters = {}) {
         try {
