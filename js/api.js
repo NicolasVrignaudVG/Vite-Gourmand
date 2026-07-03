@@ -80,6 +80,10 @@ const Auth = {
         return apiFetch('/api/auth/me', { method: 'PUT', body: JSON.stringify(data) });
     },
 
+    async deleteMe() {
+        return apiFetch('/api/auth/me', { method: 'DELETE' });
+    },
+
 
     async forgotPassword(email) {
         return apiFetch('/api/auth/forgot-password', {

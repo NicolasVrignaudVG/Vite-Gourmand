@@ -954,6 +954,19 @@ async function initEspaceUtilisateur() {
 
     initMonProfil();
 
+    // Suppression de compte — RGPD
+    document.getElementById('btn-supprimer-compte')?.addEventListener('click', async () => {
+        if (!confirm('Êtes-vous sûr de vouloir supprimer votre compte ? Cette action est définitive et irréversible.')) return;
+        if (!confirm('Dernière confirmation — votre compte sera supprimé définitivement.')) return;
+        try {
+            await Auth.deleteMe();
+            localStorage.removeItem('user');
+            window.location.hash = 'home';
+        } catch (err) {
+            alert('Erreur lors de la suppression : ' + err.message);
+        }
+    });
+
     try {
         const commandes = await Commandes.getMes();
         const list = document.getElementById('user-commandes-list');
