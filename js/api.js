@@ -5,7 +5,7 @@
 
 const API_URL = window.location.hostname === 'localhost'
     ? 'http://127.0.0.1:8000'
-    : ''; // En production : Edge Function Vercel → Render (même domaine, cookies HttpOnly préservés)
+    : 'https://vite-gourmand-back-chap.onrender.com';
 
 // ─────────────────────────────────────────
 // UTILITAIRE — fetch avec JWT automatique
