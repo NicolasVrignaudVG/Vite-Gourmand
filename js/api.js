@@ -5,7 +5,7 @@
 
 const API_URL = window.location.hostname === 'localhost'
     ? 'http://127.0.0.1:8000'
-    : ''; // En production : proxy Vercel → Render (même domaine, cookies SameSite=Lax)
+    : ''; // En production : Edge Function Vercel → Render (même domaine, cookies HttpOnly préservés)
 
 // ─────────────────────────────────────────
 // UTILITAIRE — fetch avec JWT automatique
