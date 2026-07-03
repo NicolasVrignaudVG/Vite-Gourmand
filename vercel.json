@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/:path*",
+      "destination": "https://vite-gourmand-back-chap.onrender.com/api/:path*"
+    }
+  ]
+}

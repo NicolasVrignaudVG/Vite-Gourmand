@@ -5,7 +5,7 @@
 
 const API_URL = window.location.hostname === 'localhost'
     ? 'http://127.0.0.1:8000'
-    : 'https://vite-gourmand-back-chap.onrender.com';
+    : ''; // En production : proxy Vercel → Render (même domaine, cookies SameSite=Lax)
 
 // ─────────────────────────────────────────
 // UTILITAIRE — fetch avec JWT automatique
