@@ -22,8 +22,11 @@ async function apiFetch(endpoint, options = {}) {
         credentials: 'include',
     });
 
-    // JWT expiré → tenter un refresh automatique (sauf pour /refresh lui-même)
-    if (response.status === 401 && !options._retried && endpoint !== '/api/auth/refresh') {
+    // Routes d'authentification — ne jamais intercepter leur 401 automatiquement
+    const isAuthRoute = ['/api/auth/login', '/api/auth/refresh', '/api/auth/register'].includes(endpoint);
+
+    // JWT expiré → tenter un refresh automatique (sauf pour les routes auth)
+    if (response.status === 401 && !options._retried && !isAuthRoute) {
         const refreshed = await Auth.tryRefresh();
         if (refreshed) {
             return apiFetch(endpoint, { ...options, _retried: true });
@@ -33,7 +36,7 @@ async function apiFetch(endpoint, options = {}) {
         throw new Error('Session expirée, veuillez vous reconnecter.');
     }
 
-    if (response.status === 401) {
+    if (response.status === 401 && !isAuthRoute) {
         localStorage.removeItem('user');
         window.location.hash = 'connexion';
         throw new Error('Session expirée, veuillez vous reconnecter.');
