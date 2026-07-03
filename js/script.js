@@ -896,15 +896,19 @@ function initMonProfil() {
     set('profil-adresse', user?.adresse);
 
     document.getElementById('btn-save-profil')?.addEventListener('click', async () => {
-        const msg     = document.getElementById('profil-msg');
-        const nom     = document.getElementById('profil-nom')?.value.trim();
-        const prenom  = document.getElementById('profil-prenom')?.value.trim();
-        const tel     = document.getElementById('profil-gsm')?.value.trim();
-        const adresse = document.getElementById('profil-adresse')?.value.trim();
-        const mdp     = document.getElementById('profil-mdp')?.value;
+        const msg        = document.getElementById('profil-msg');
+        const nom        = document.getElementById('profil-nom')?.value.trim();
+        const prenom     = document.getElementById('profil-prenom')?.value.trim();
+        const tel        = document.getElementById('profil-gsm')?.value.trim();
+        const adresse    = document.getElementById('profil-adresse')?.value.trim();
+        const mdp        = document.getElementById('profil-mdp')?.value;
+        const mdpConfirm = document.getElementById('profil-mdp-confirm')?.value;
 
         if (tel && !/^(\+33|0)[0-9]{9}$/.test(tel.replace(/\s/g, ''))) {
             showMsg(msg, 'Numéro de téléphone invalide (ex : 0612345678).', 'error'); return;
+        }
+        if (mdp && mdp !== mdpConfirm) {
+            showMsg(msg, 'Les mots de passe ne correspondent pas.', 'error'); return;
         }
         if (mdp && !/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[\W_]).{10,}$/.test(mdp)) {
             showMsg(msg, 'Le mot de passe doit contenir 10 caractères min, une majuscule, une minuscule, un chiffre et un caractère spécial.', 'error'); return;
@@ -928,13 +932,16 @@ function initMonProfil() {
                 localStorage.setItem('user', JSON.stringify(stored));
             }
             showMsg(msg, 'Profil mis à jour avec succès !', 'success');
-            const mdpField = document.getElementById('profil-mdp');
-            if (mdpField) mdpField.value = '';
+            const mdpField        = document.getElementById('profil-mdp');
+            const mdpConfirmField = document.getElementById('profil-mdp-confirm');
+            if (mdpField)        mdpField.value        = '';
+            if (mdpConfirmField) mdpConfirmField.value = '';
         } catch (err) {
             showMsg(msg, err.message, 'error');
         }
     });
-    initPasswordToggle('.password-toggle', 'profil-mdp');
+    initPasswordToggle('.password-toggle',  'profil-mdp');
+    initPasswordToggle('.password-toggle2', 'profil-mdp-confirm');
 }
 
 async function initEspaceUtilisateur() {
