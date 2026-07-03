@@ -44,7 +44,14 @@ async function apiFetch(endpoint, options = {}) {
 
     if (!response.ok) {
         const error = await response.json().catch(() => ({ error: 'Erreur serveur' }));
-        throw new Error(error.error || `Erreur ${response.status}`);
+        // Symfony json_login retourne {"code":401,"message":"..."} — les API retournent {"error":"..."}
+        const msg = error.error || error.message || `Erreur ${response.status}`;
+        // Traduire les messages Symfony en français
+        const translations = {
+            'Invalid credentials.': 'Identifiants incorrects. Vérifiez votre e-mail et votre mot de passe.',
+            'Bad credentials.':     'Identifiants incorrects. Vérifiez votre e-mail et votre mot de passe.',
+        };
+        throw new Error(translations[msg] || msg);
     }
 
     // 204 No Content
