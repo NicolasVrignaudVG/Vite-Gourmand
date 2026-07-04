@@ -42,6 +42,9 @@ document.addEventListener('DOMContentLoaded', () => {
             const html = await response.text();
             mainPage.innerHTML = html;
 
+            // Remonter en haut de page à chaque changement de page (comportement SPA attendu)
+            window.scrollTo(0, 0);
+
             // Titre du document
             const route = allRoutes.find(r => r.pathHtml.includes(`${pageName}.html`));
             document.title = route ? `${route.title} – ${websiteName}` : websiteName;
