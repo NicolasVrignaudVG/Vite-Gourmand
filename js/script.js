@@ -1163,7 +1163,8 @@ async function initEspaceEmploye() {
                     </div>
                     <div class="commande-item-body">
                         <div class="commande-info-line"><span>Client</span><strong>${c.utilisateur?.prenom || ''} ${c.utilisateur?.nom || ''} — ${c.utilisateur?.telephone || ''}</strong></div>
-                        <div class="commande-info-line"><span>Menu</span><strong>${c.menu?.titre || ''} × ${sanitize(c.nombre_personnes)} pers.</strong></div>
+                        <div class="commande-info-line"><span>Menu</span><strong>${c.menu?.titre || ''} × ${sanitize(c.nombrePersonnes || c.nombre_personnes || '–')} pers.</strong></div>
+                        ${(c.plats && c.plats.length) ? `<div class="commande-info-line"><span>Plats choisis</span><strong>${c.plats.map(p => `${sanitize(p.nom || '–')}${p.type ? ` (${sanitize(p.type)})` : ''}`).join(', ')}</strong></div>` : ''}
                         <div class="commande-info-line"><span>Adresse</span><strong>${c.adresse_livraison || ''}, ${c.cp_livraison || ''} ${c.ville_livraison || ''}</strong></div>
                         <div class="commande-info-line"><span>Total</span><strong>${sanitize(c.prix_total)}€</strong></div>
                     </div>
@@ -1543,6 +1544,7 @@ async function initEspaceAdmin() {
                     <div class="commande-item-body">
                         <div class="commande-info-line"><span>Client</span><strong>${prenom} ${nom} — ${tel}</strong></div>
                         ${menusHtml}
+                        ${(c.plats && c.plats.length) ? `<div class="commande-info-line"><span>Plats choisis</span><strong>${c.plats.map(p => `${sanitize(p.nom || '–')}${p.type ? ` (${sanitize(p.type)})` : ''}`).join(', ')}</strong></div>` : ''}
                         <div class="commande-info-line"><span>Total</span><strong>${sanitize(total)}€</strong></div>
                         <div class="commande-info-line"><span>Adresse</span><strong>${sanitize(c.adresseLivraison||c.adresse_livraison||'–')}, ${sanitize(c.cpLivraison||c.cp_livraison||'')} ${sanitize(c.villeLivraison||c.ville_livraison||'')}</strong></div>
                     </div>
