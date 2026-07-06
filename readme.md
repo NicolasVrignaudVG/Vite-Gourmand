@@ -1,26 +1,23 @@
 # 🍽️ Vite & Gourmand
 
-Application web de présentation et commande de menus pour la société **Vite & Gourmand**, entreprise de traiteur basée à Bordeaux.
-
----
+Application web de présentation et commande de menus pour la société Vite & Gourmand, entreprise de traiteur basée à Bordeaux.
 
 ## 📋 Description
 
 Vite & Gourmand propose ses prestations pour tout type d'événement (Noël, Pâques, événements professionnels...). Cette application permet :
+
 - De consulter les menus disponibles et de composer son repas plat par plat
 - De passer commande en ligne avec calcul automatique des frais de livraison
 - De gérer les commandes (espace utilisateur, employé et administrateur)
 - De valider/refuser les avis clients
 - De consulter les statistiques via MongoDB
 
----
-
 ## 🛠️ Stack technique
 
 | Couche | Technologie |
 |---|---|
 | Front-end | HTML5, CSS3, SCSS, JavaScript vanilla |
-| Back-end | PHP 8.4 — Symfony 7 |
+| Back-end | PHP 8.4 — Symfony 8 |
 | ORM | Doctrine |
 | Authentification | JWT (LexikJWTAuthenticationBundle) |
 | Base de données relationnelle | MySQL 8.0 |
@@ -31,17 +28,14 @@ Vite & Gourmand propose ses prestations pour tout type d'événement (Noël, Pâ
 | Déploiement back | Render (Docker) |
 | Base de données production | Clever Cloud MySQL |
 
----
-
 ## ⚙️ Prérequis
 
-- [PHP](https://www.php.net/) >= 8.4
-- [Composer](https://getcomposer.org/)
-- [MySQL](https://www.mysql.com/) >= 8.0
-- [Git](https://git-scm.com/)
+- PHP >= 8.4
+- Composer
+- Symfony CLI
+- MySQL >= 8.0
+- Git
 - Extension PHP : `pdo_mysql`, `fileinfo`, `mongodb`, `zip`
-
----
 
 ## 🚀 Installation en local
 
@@ -49,11 +43,11 @@ Vite & Gourmand propose ses prestations pour tout type d'événement (Noël, Pâ
 
 ```bash
 # Front-end
-git clone https://github.com/joujjj/Vite-Gourmand.git
+git clone https://github.com/NicolasVrignaudVG/Vite-Gourmand.git
 cd Vite-Gourmand
 
 # Back-end
-git clone https://github.com/joujjj/Vite-Gourmand-back.git
+git clone https://github.com/NicolasVrignaudVG/Vite-Gourmand-back.git
 cd Vite-Gourmand-back
 ```
 
@@ -65,9 +59,9 @@ composer install
 
 ### 3. Configurer les variables d'environnement
 
-Créer un fichier `.env.local` à la racine du back-end :
+Créer un fichier `.env.local` à la racine du back-end (voir `.env.production` comme référence des clés attendues) :
 
-```env
+```
 APP_ENV=dev
 APP_SECRET=votre_secret_32_caracteres
 
@@ -76,12 +70,9 @@ DATABASE_URL=mysql://root:@127.0.0.1:3306/vite_gourmand?serverVersion=8.0&charse
 
 # MongoDB Atlas
 MONGO_URI=mongodb+srv://USER:PASSWORD@CLUSTER.mongodb.net/
-MONGO_DB=vite_gourmand_stats
 
 # Mails (Brevo API)
 MAILER_DSN=brevo+api://VOTRE_CLE_API@default
-MAILER_SENDER_EMAIL=votre@email.com
-MAILER_SENDER_NAME=Vite & Gourmand
 
 # Calcul livraison
 ORS_API_KEY=votre_cle_openrouteservice
@@ -100,6 +91,8 @@ CORS_ALLOW_ORIGIN=^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$
 
 ### 4. Générer les clés JWT
 
+Les clés sont déjà générées dans `config/jwt/` (exclues du dépôt via `.gitignore`). Si elles sont absentes sur ta machine :
+
 ```bash
 php bin/console lexik:jwt:generate-keypair
 ```
@@ -114,24 +107,26 @@ php bin/console doctrine:migrations:migrate --no-interaction
 ### 6. Charger les données de test
 
 ```bash
-php bin/console dbal:run-sql "$(cat database.sql)"
+mysql -u root -p vite_gourmand < data_only.sql
 ```
+
+> **Note** : le fichier `database.sql` (structure + données, en SQL brut, sans dépendance à Doctrine) est fourni séparément comme livrable démontrant la maîtrise du langage SQL, conformément à l'exigence de l'énoncé ECF (*"L'utilisation de fixture et/ou de migration n'implique pas que vous maitrisez le SQL"*). Le schéma réellement utilisé par l'application est celui généré par les migrations Doctrine ci-dessus, alimenté par `data_only.sql`.
 
 ### 7. Lancer les serveurs
 
-**Back-end :**
+Back-end :
+
 ```bash
-php -d max_execution_time=120 -S 127.0.0.1:8000 -t public
+symfony server:start
 ```
 
-**Front-end :**
+Front-end :
+
 ```bash
 php -S localhost:3000
 ```
 
-L'application est accessible sur **http://localhost:3000**
-
----
+L'application est accessible sur `http://localhost:3000`
 
 ## 👤 Comptes de test
 
@@ -139,9 +134,7 @@ L'application est accessible sur **http://localhost:3000**
 |---|---|---|
 | Administrateur | admin@vitegourmand.fr | Admin@1234 |
 | Employé | employe@vitegourmand.fr | Employe@1234 |
-| Utilisateur | marie.dupont@email.com | Admin1234! |
-
----
+| Utilisateur | marie.dupont@email.com | User@1234 |
 
 ## 🌐 Application en ligne
 
@@ -149,8 +142,6 @@ L'application est accessible sur **http://localhost:3000**
 |---|---|
 | Front-end | https://project-8562e.vercel.app |
 | Back-end | https://vite-gourmand-back-chap.onrender.com |
-
----
 
 ## 🌿 Organisation des branches Git
 
@@ -164,8 +155,6 @@ main
     ├── feature/espace-employe
     └── feature/espace-admin
 ```
-
----
 
 ## 📁 Structure du projet
 
@@ -193,8 +182,6 @@ Vite-Gourmand-back/     ← Back-end Symfony
 └── public/             # Point d'entrée Apache
 ```
 
----
-
 ## 🔒 Sécurité
 
 - Authentification JWT (tokens signés RS256)
@@ -206,23 +193,18 @@ Vite-Gourmand-back/     ← Back-end Symfony
 - CORS configuré (NelmioCorsBundle)
 - Conformité RGPD
 
----
-
 ## ♿ Accessibilité
 
-L'application respecte les critères du **RGAA** (Référentiel Général d'Amélioration de l'Accessibilité) :
+L'application respecte les critères du RGAA (Référentiel Général d'Amélioration de l'Accessibilité) :
+
 - Skip links
 - Attributs `aria-*`
 - Navigation clavier
 - Contraste suffisant
 
----
-
 ## 🔗 Gestion de projet
 
-Tableau de suivi : [Notion](https://www.notion.so/7bbf6c33689f48798cac103ce1ece2a3?v=7f5ec6945ca4454ca6b9e22069144fa5)
-
----
+Tableau de suivi : Notion
 
 ## 📄 Licence
 
