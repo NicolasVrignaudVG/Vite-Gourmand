@@ -1620,22 +1620,7 @@ async function initEspaceAdmin() {
                         <div class="avis-actions">
                             ${a.statut !== 'valide'  ? '<button class="btn-valider-avis btn-step-next" style="font-size:.8rem;padding:4px 10px">✅ Valider</button>' : ''}
                             ${a.statut !== 'refuse'  ? '<button class="btn-refuser-avis" style="font-size:.8rem;padding:4px 10px;background:#fee2e2;color:#dc2626;border:none;border-radius:6px;cursor:pointer">✕ Refuser</button>' : ''}
-                            <button class="btn-modifier-avis" style="font-size:.8rem;padding:4px 10px;background:#e0f2fe;color:#0369a1;border:none;border-radius:6px;cursor:pointer">✏️ Modifier</button>
                             <button class="btn-supprimer-avis" style="font-size:.8rem;padding:4px 10px;background:#fee2e2;color:#dc2626;border:none;border-radius:6px;cursor:pointer">🗑️ Supprimer</button>
-                        </div>
-                        <div class="avis-edit-form" style="display:none;margin-top:.8rem;padding:.8rem;background:var(--color-background-secondary,#f9f5f0);border-radius:8px">
-                            <div class="form-row" style="gap:.5rem;margin-bottom:.5rem">
-                                <label style="font-size:.85rem">Note :
-                                    <select class="avis-edit-note" style="margin-left:.3rem">
-                                        ${[1,2,3,4,5].map(n => `<option value="${n}" ${n===a.note?'selected':''}>${n} ★</option>`).join('')}
-                                    </select>
-                                </label>
-                            </div>
-                            <textarea class="avis-edit-description" rows="3" style="width:100%;border-radius:6px;border:1px solid var(--color-border,#e5e7eb);padding:.4rem;font-size:.9rem">${sanitize(a.description || '')}</textarea>
-                            <div style="margin-top:.5rem;display:flex;gap:.5rem">
-                                <button class="btn-save-avis-edit btn-step-next" style="font-size:.8rem;padding:4px 12px">💾 Enregistrer</button>
-                                <button class="btn-cancel-avis-edit" style="font-size:.8rem;padding:4px 12px;background:none;border:1px solid var(--color-border,#ccc);border-radius:6px;cursor:pointer">Annuler</button>
-                            </div>
                         </div>
                     </div>`).join('');
 
@@ -1664,35 +1649,6 @@ async function initEspaceAdmin() {
                         if (!confirm('Supprimer définitivement cet avis ?')) return;
                         try { await Avis.delete(item.dataset.id); await chargerAvisAdmin(); }
                         catch (err) { alert(err.message); }
-                    });
-                });
-
-                // Afficher formulaire modification
-                list.querySelectorAll('.btn-modifier-avis').forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        const item  = btn.closest('.avis-item');
-                        const form  = item.querySelector('.avis-edit-form');
-                        form.style.display = form.style.display === 'none' ? 'block' : 'none';
-                    });
-                });
-
-                // Sauvegarder modification
-                list.querySelectorAll('.btn-save-avis-edit').forEach(btn => {
-                    btn.addEventListener('click', async () => {
-                        const item  = btn.closest('.avis-item');
-                        const note  = parseInt(item.querySelector('.avis-edit-note').value);
-                        const desc  = item.querySelector('.avis-edit-description').value.trim();
-                        try {
-                            await Avis.update(item.dataset.id, { note, description: desc });
-                            await chargerAvisAdmin();
-                        } catch (err) { alert(err.message); }
-                    });
-                });
-
-                // Annuler modification
-                list.querySelectorAll('.btn-cancel-avis-edit').forEach(btn => {
-                    btn.addEventListener('click', () => {
-                        btn.closest('.avis-edit-form').style.display = 'none';
                     });
                 });
             }
