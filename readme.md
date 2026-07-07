@@ -59,7 +59,7 @@ composer install
 
 ### 3. Configurer les variables d'environnement
 
-Créer un fichier `.env.local` à la racine du back-end (voir `.env.production` comme référence des clés attendues) :
+Créez un fichier `.env.local` à la racine du back-end (référez-vous à `.env.production` pour la liste des clés attendues) :
 
 ```
 APP_ENV=dev
@@ -70,9 +70,12 @@ DATABASE_URL=mysql://root:@127.0.0.1:3306/vite_gourmand?serverVersion=8.0&charse
 
 # MongoDB Atlas
 MONGO_URI=mongodb+srv://USER:PASSWORD@CLUSTER.mongodb.net/
+MONGO_DB=vite_gourmand_stats
 
 # Mails (Brevo API)
 MAILER_DSN=brevo+api://VOTRE_CLE_API@default
+MAILER_SENDER_EMAIL=votre@email.com
+MAILER_SENDER_NAME=Vite & Gourmand
 
 # Calcul livraison
 ORS_API_KEY=votre_cle_openrouteservice
@@ -91,7 +94,7 @@ CORS_ALLOW_ORIGIN=^https?://(localhost|127\.0\.0\.1)(:[0-9]+)?$
 
 ### 4. Générer les clés JWT
 
-Les clés sont déjà générées dans `config/jwt/` (exclues du dépôt via `.gitignore`). Si elles sont absentes sur ta machine :
+Les clés sont déjà générées dans `config/jwt/` (exclues du dépôt via `.gitignore`). Si elles sont absentes sur votre machine :
 
 ```bash
 php bin/console lexik:jwt:generate-keypair
@@ -191,6 +194,7 @@ Vite-Gourmand-back/     ← Back-end Symfony
 - Gestion des rôles : `ROLE_USER`, `ROLE_EMPLOYE`, `ROLE_ADMIN`
 - Protection XSS côté front (`sanitize()`)
 - CORS configuré (NelmioCorsBundle)
+- Content Security Policy stricte (NelmioSecurityBundle)
 - Conformité RGPD
 
 ## ♿ Accessibilité
