@@ -137,13 +137,12 @@ L'application est accessible sur `http://localhost:3000`
 |---|---|---|
 | Administrateur | admin@vitegourmand.fr | Admin@1234 |
 | Employé | employe@vitegourmand.fr | Employe@1234 |
-| Utilisateur | marie.dupont@email.com | User@1234 |
 
 ## 🌐 Application en ligne
 
 | Service | URL |
 |---|---|
-| Front-end | https://project-8562e.vercel.app |
+| Front-end | https://vitegourmand33.vercel.app |
 | Back-end | https://vite-gourmand-back-chap.onrender.com |
 
 ## 🌿 Organisation des branches Git
