@@ -12,6 +12,7 @@ export const allRoutes = [
     new Route("/reinitialiser-mdp",     "Réinitialiser le mot de passe", "/pages/reinitialiser-mdp.html"),
     new Route("/mentions-legales",      "Mentions légales",         "/pages/mentions-legales.html"),
     new Route("/cgv",                   "CGV",                      "/pages/cgv.html"),
+    new Route("/cookies",               "Gestion des cookies",      "/pages/cookies.html"),
     new Route("/espace-utilisateur",    "Mon espace",               "/pages/espace-utilisateur.html"),
     new Route("/espace-employe",        "Espace Employé",           "/pages/espace-employe.html"),
     new Route("/espace-admin",          "Administration",           "/pages/espace-admin.html"),
