@@ -137,7 +137,7 @@ L'application est accessible sur `http://localhost:3000`
 |---|---|---|
 | Administrateur | admin@vitegourmand.fr | Admin@1234 |
 | Employé | employe@vitegourmand.fr | Employe@1234 |
-| Utilisateur | marie.dupont@email.com | User@1234 |
+| Utilisateur | marie.dupont24@email.com | Visiteur@12345 |
 
 ## 🌐 Application en ligne
 
