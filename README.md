@@ -30,7 +30,7 @@ Vite & Gourmand propose ses prestations pour tout type d'événement (Noël, Pâ
 
 ## 📚 Documentation
 
-Les livrables documentaires du projet sont regroupés dans le dossier [`docs/`](docs/) :
+Les livrables documentaires du projet sont regroupés dans le dossier [`docu/`](docu/) :
 
 - [Documentation technique](docs/Documentation_Technique_Vite_Gourmand_v1.3.pdf) — réflexions technologiques, environnement, MCD, diagrammes UML, API, sécurité
 - [Documentation de déploiement](docs/Documentation_Deploiement_Vite_Gourmand_v2.pdf)
