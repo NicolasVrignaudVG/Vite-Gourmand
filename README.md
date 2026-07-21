@@ -16,7 +16,7 @@ Vite & Gourmand propose ses prestations pour tout type d'événement (Noël, Pâ
 
 | Couche | Technologie |
 |---|---|
-| Front-end | HTML5, CSS3, SCSS, JavaScript vanilla |
+| Front-end | HTML5, CSS3, JavaScript vanilla (SPA) |
 | Back-end | PHP 8.4 — Symfony 8 |
 | ORM | Doctrine |
 | Authentification | JWT (LexikJWTAuthenticationBundle) |
@@ -27,6 +27,16 @@ Vite & Gourmand propose ses prestations pour tout type d'événement (Noël, Pâ
 | Déploiement front | Vercel |
 | Déploiement back | Render (Docker) |
 | Base de données production | Clever Cloud MySQL |
+
+## 📚 Documentation
+
+Les livrables documentaires du projet sont regroupés dans le dossier [`docu/`](docu/) :
+
+- [Documentation technique](docs/Documentation_Technique_Vite_Gourmand_v1.3.pdf) — réflexions technologiques, environnement, MCD, diagrammes UML, API, sécurité
+- [Documentation de déploiement](docs/Documentation_Deploiement_Vite_Gourmand_v2.pdf)
+- [Gestion de projet](docs/Gestion_de_Projet_Vite_Gourmand_v2.pdf)
+- [Manuel d'utilisation](docs/Manuel_Utilisation_Vite_Gourmand_v2.pdf)
+- [Charte graphique & maquettes](docs/Charte_Graphique_Vite_Gourmand_v2.pdf)
 
 ## ⚙️ Prérequis
 
@@ -137,13 +147,13 @@ L'application est accessible sur `http://localhost:3000`
 |---|---|---|
 | Administrateur | admin@vitegourmand.fr | Admin@1234 |
 | Employé | employe@vitegourmand.fr | Employe@1234 |
-| Utilisateur | marie.dupont@email.com | User@1234 |
+| Utilisateur | marie.dupont24@email.com | Visiteur@12345 |
 
 ## 🌐 Application en ligne
 
 | Service | URL |
 |---|---|
-| Front-end | https://project-8562e.vercel.app |
+| Front-end | https://vitegourmand33.vercel.app |
 | Back-end | https://vite-gourmand-back-chap.onrender.com |
 
 ## 🌿 Organisation des branches Git
@@ -163,14 +173,16 @@ main
 
 ```
 Vite-Gourmand/          ← Front-end
-├── css/                # CSS compilé
-├── scss/               # Sources SCSS
+├── css/
+│   └── main.css        # Design tokens, composants, mise en page
 ├── js/
 │   ├── api.js          # Appels API centralisés
 │   ├── script.js       # Logique applicative
-│   └── Router/         # Routeur SPA
+│   └── router.js       # Routeur SPA
 ├── images/             # Assets
 ├── pages/              # Pages HTML (SPA)
+├── docs/               # Livrables documentaires ECF (PDF + diagrammes)
+├── vercel.json         # Proxy /api/* vers Render + routing SPA
 ├── index.html          # Point d'entrée
 └── README.md
 
@@ -189,7 +201,7 @@ Vite-Gourmand-back/     ← Back-end Symfony
 
 - Authentification JWT (tokens signés RS256)
 - Mots de passe hashés (bcrypt)
-- Protection CSRF via tokens
+- Protection CSRF : cookies SameSite=Lax + Secure (proxy Vercel same-site), CORS restrictif, Content-Type JSON obligatoire
 - Validation des entrées côté serveur (Symfony Validator)
 - Gestion des rôles : `ROLE_USER`, `ROLE_EMPLOYE`, `ROLE_ADMIN`
 - Protection XSS côté front (`sanitize()`)
@@ -208,7 +220,7 @@ L'application respecte les critères du RGAA (Référentiel Général d'Amélior
 
 ## 🔗 Gestion de projet
 
-Tableau de suivi : Notion
+Tableau de suivi : [Notion — Suivi des tâches Vite & Gourmand](https://www.notion.so/7bbf6c33689f48798cac103ce1ece2a3?v=7f5ec6945ca4454ca6b9e22069144fa5)
 
 ## 📄 Licence
 
