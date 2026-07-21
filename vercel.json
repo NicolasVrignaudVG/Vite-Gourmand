@@ -1,1 +1,7 @@
-{}
+{
+  "rewrites": [
+    { "source": "/api/(.*)", "destination": "https://vite-gourmand-back-chap.onrender.com/api/$1" },
+    { "source": "/bundles/(.*)", "destination": "https://vite-gourmand-back-chap.onrender.com/bundles/$1" },
+    { "source": "/((?!.*\\.).*)", "destination": "/index.html" }
+  ]
+}
