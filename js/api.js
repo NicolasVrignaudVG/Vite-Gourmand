@@ -3,9 +3,11 @@
 // Centralise tous les appels vers l'API Symfony
 // ═══════════════════════════════════════════════════════════
 
-const API_URL = window.location.hostname === 'localhost'
-    ? 'http://127.0.0.1:8000'
-    : 'https://vite-gourmand-back-chap.onrender.com';
+// Production : URLs relatives → les appels /api/* passent par le proxy Vercel (same-site)
+// Local : appel direct au serveur Symfony
+const API_URL = ['localhost', '127.0.0.1'].includes(window.location.hostname)
+    ? 'http://localhost:8000'
+    : '';
 
 // ─────────────────────────────────────────
 // UTILITAIRE — fetch avec JWT automatique
