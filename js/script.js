@@ -2262,3 +2262,25 @@ document.addEventListener('DOMContentLoaded', () => {
     setTimeout(chargerHorairesFooter, 1000);
     setTimeout(chargerHorairesFooter, 2500);
 });
+
+// Navigation par attribut data-nav — remplace les gestionnaires onclick inline,
+// interdits par la Content Security Policy (script-src 'self').
+document.addEventListener('click', (e) => {
+    const el = e.target.closest('[data-nav]');
+    if (el) {
+        e.preventDefault();
+        window.location.hash = el.dataset.nav;
+    }
+});
+
+// Fermeture de modale par attribut data-close-modal — remplace les gestionnaires onclick inline,
+document.addEventListener('click', (e) => {
+    const el = e.target.closest('[data-close-modal]');
+    if (el) {
+        e.preventDefault();
+        const modal = document.getElementById(el.dataset.closeModal);
+        if (modal) {
+            modal.style.display = 'none';
+        }
+    }
+});
