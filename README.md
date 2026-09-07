@@ -182,6 +182,8 @@ main
     └── feature/espace-admin
 ```
 
+Convention de nommage selon la nature du travail : `feature/*` pour les fonctionnalités, `fix/*` pour les correctifs, `security/*` pour le durcissement, `test/*` pour l'ajout de tests, `refactor/*` pour les refactorisations.
+
 ## 📁 Structure du projet
 
 ```
@@ -205,7 +207,7 @@ Vite-Gourmand-back/     ← Back-end Symfony
 │   ├── Controller/     # Routes API REST
 │   ├── Entity/         # Entités Doctrine
 │   ├── Repository/     # Composants d'accès aux données (QueryBuilder)
-│   ├── Service/        # Services métier (Commande, Mail, Livraison, MongoDB)
+│   ├── Service/        # Services métier (Commande, Menu, Mail, Livraison, MongoDB)
 │   ├── Security/       # Émission des cookies JWT et refresh
 │   ├── EventListener/  # Réponses d'erreur JSON
 │   └── EventSubscriber/ # Limitation des tentatives de connexion
