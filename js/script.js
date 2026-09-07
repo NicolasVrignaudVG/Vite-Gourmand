@@ -148,6 +148,21 @@ function renderMenuCards(menus, grid, countLabel, noResults) {
 // ─────────────────────────────────────────
 // PAGE MENUS — Filtres (côté client)
 // ─────────────────────────────────────────
+/**
+ * Remplit un select de filtre à partir des valeurs distinctes trouvées dans les menus.
+ * Évite une liste d'options figée dans le HTML, qui ignorerait les thèmes et régimes
+ * créés depuis l'espace employé.
+ */
+function remplirSelectFiltre(select, menus, champ, libelleTous) {
+    if (!select) return;
+
+    const valeurs = [...new Set(menus.map(m => m[champ]).filter(Boolean))]
+        .sort((a, b) => a.localeCompare(b, 'fr'));
+
+    select.innerHTML = `<option value="">${libelleTous}</option>` +
+        valeurs.map(v => `<option value="${sanitize(v)}">${sanitize(v)}</option>`).join('');
+}
+
 function initMenuFiltersLive(allMenus, grid, countLabel, noResults) {
     const sliderMax    = document.getElementById('filter-prix-max');
     const labelMax     = document.getElementById('prix-max-label');
@@ -159,6 +174,10 @@ function initMenuFiltersLive(allMenus, grid, countLabel, noResults) {
     const btnReset     = document.getElementById('btn-reset-filters');
     const btnReset2    = document.getElementById('btn-reset-filters2');
     if (!sliderMax) return;
+
+    // Options des filtres dérivées des menus chargés, et non figées dans le HTML
+    remplirSelectFiltre(selectTheme,  allMenus, 'theme',  'Tous les thèmes');
+    remplirSelectFiltre(selectRegime, allMenus, 'regime', 'Tous les régimes');
 
     function applyFilters() {
         const maxSlider = parseInt(sliderMax.value);
